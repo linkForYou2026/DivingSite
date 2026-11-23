@@ -1,0 +1,11 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  // Cloudflare の Worker 名（ダッシュボードのプロジェクト名 divingsite と合わせる）
+  "name": "divingsite",
+  "compatibility_date": "2026-11-22",
+  // npm run build で作られる out フォルダを、そのまま公開する
+  "assets": {
+    "directory": "./out",
+    "not_found_handling": "404-page"
+  }
+}
