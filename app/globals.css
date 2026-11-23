@@ -3,8 +3,11 @@
 /* サイト共通の色（仕様書 付録A・9章） */
 @theme {
   --color-leisure: #4fc3f7;
+  --color-leisure-ink: #01436b;
   --color-pro: #0d47a1;
+  --color-ocean: #0277bd;
   --color-ocean-deep: #062a4f;
+  --color-sand: #fff8e1;
 }
 
 html {
@@ -13,4 +16,61 @@ html {
 
 body {
   font-family: "Hiragino Kaku Gothic ProN", "Hiragino Sans", "Noto Sans JP", Meiryo, sans-serif;
+  line-height: 1.75;
+}
+
+/* キーボード操作時の枠 */
+:focus-visible {
+  outline: 3px solid #ffb300;
+  outline-offset: 2px;
+}
+
+/* ---------- ボタン（文字と背景のコントラストを確保した色） ---------- */
+@utility btn {
+  display: inline-block;
+  text-align: center;
+  font-weight: 700;
+  border-radius: 0.6rem;
+  padding: 0.55rem 1.1rem;
+  cursor: pointer;
+}
+@utility btn-primary {
+  background: var(--color-ocean);
+  color: #fff;
+  &:hover { background: var(--color-pro); }
+}
+@utility btn-warm {
+  /* オレンジ：申し込み・お問い合わせ系 */
+  background: #c2410c;
+  color: #fff;
+  font-weight: 700;
+  &:hover { background: #9a3412; }
+}
+@utility btn-ghost {
+  background: #fff;
+  color: var(--color-pro);
+  border: 2px solid var(--color-pro);
+  &:hover { background: #e3f2fd; }
+}
+
+/* ---------- ブログ本文 ---------- */
+@utility prose-blog {
+  font-size: 1rem;
+  & h2 { font-size: 1.3rem; font-weight: 700; color: var(--color-pro); margin: 2rem 0 0.75rem; padding-left: 0.6rem; border-left: 5px solid var(--color-leisure); }
+  & h3 { font-size: 1.12rem; font-weight: 700; color: var(--color-ocean-deep); margin: 1.5rem 0 0.5rem; }
+  & h4 { font-weight: 700; margin: 1.2rem 0 0.4rem; }
+  & p { margin: 0 0 1rem; }
+  & ul { list-style: disc; padding-left: 1.4rem; margin: 0 0 1rem; }
+  & ol { list-style: decimal; padding-left: 1.4rem; margin: 0 0 1rem; }
+  & li { margin: 0.2rem 0; }
+  & a { color: var(--color-ocean); text-decoration: underline; }
+  & blockquote { border-left: 4px solid #cfd8dc; padding: 0.3rem 0 0.3rem 1rem; color: #546e7a; margin: 0 0 1rem; }
+  & img { border-radius: 0.75rem; margin: 0 auto; }
+  & figure { margin: 1.2rem 0; }
+  & hr { margin: 2rem 0; border-color: #d5e2ee; }
+}
+
+/* スマホの固定ボタンぶん、ページ下に余白を空ける */
+@media (max-width: 767px) {
+  body { padding-bottom: 56px; }
 }

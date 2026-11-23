@@ -1,0 +1,683 @@
+{
+  "defaultAgency": "padi",
+  "meta": {
+    "lastChecked": "2026-11-22"
+  },
+  "agencies": [
+    {
+      "id": "padi",
+      "name": "PADI",
+      "skip": {
+        "from": "dm",
+        "to": "owsi",
+        "label": "AIを飛ばして直接インストラクターを目指すことも可"
+      },
+      "notes": [],
+      "steps": [
+        {
+          "id": "ow",
+          "short": "オープン・ウォーター",
+          "nameJa": "オープン・ウォーター・ダイバー",
+          "nameEn": "Open Water Diver",
+          "abbr": "OW",
+          "category": "leisure",
+          "optional": false,
+          "one": "はじめての資格",
+          "summary": "最初に取る基本の資格。トレーニングと同程度の環境で、資格を持つバディと一緒に潜れるようになります。",
+          "canDo": [
+            "最大18mを目安に、資格を持つバディと一緒に潜れる",
+            "ファンダイブやダイビングツアーに参加できる",
+            "タンクの充填や器材レンタルを受けられる"
+          ],
+          "requirements": [
+            "最低年齢 15歳（10〜14歳はジュニア・オープン・ウォーター）",
+            "前提資格なし"
+          ],
+          "next": "aow"
+        },
+        {
+          "id": "aow",
+          "short": "アドバンスド・オープン・ウォーター",
+          "nameJa": "アドバンスド・オープン・ウォーター・ダイバー",
+          "nameEn": "Advanced Open Water Diver",
+          "abbr": "AOW",
+          "category": "leisure",
+          "optional": false,
+          "one": "経験を広げる",
+          "summary": "ナビゲーションや中性浮力、ディープなどを体験し、潜れる環境を広げます。",
+          "canDo": [
+            "最大30mを目安に潜れる（12〜14歳は21m）",
+            "ナイトやボートなど、楽しめるポイントが広がる",
+            "スペシャルティコースへ進みやすくなる"
+          ],
+          "requirements": [
+            "オープン・ウォーター・ダイバー取得済み",
+            "最低年齢 15歳（12〜14歳はジュニア）"
+          ],
+          "next": "rd"
+        },
+        {
+          "id": "rd",
+          "short": "レスキュー",
+          "nameJa": "レスキュー・ダイバー",
+          "nameEn": "Rescue Diver",
+          "abbr": "RD",
+          "category": "leisure",
+          "optional": false,
+          "one": "人を助ける力",
+          "summary": "トラブルの予防と対処、仲間の救助を学びます。プロを目指す人の前提資格です。",
+          "canDo": [
+            "トラブルを予防し、早めに気づける",
+            "自分や仲間のトラブルに対処できる",
+            "プロコース（ダイブマスター）に進める"
+          ],
+          "requirements": [
+            "アドバンスド・オープン・ウォーター（またはアドベンチャー・ダイバー＋ナビゲーション）取得済み",
+            "24か月以内のEFR（応急手当）講習修了",
+            "最低年齢 12歳"
+          ],
+          "next": "dm"
+        },
+        {
+          "id": "dm",
+          "short": "ダイブマスター",
+          "nameJa": "ダイブマスター",
+          "nameEn": "Divemaster",
+          "abbr": "DM",
+          "category": "pro",
+          "optional": false,
+          "one": "ガイド・アシスト",
+          "summary": "プロの最初のステップ。ダイビングのガイドや講習のアシストを行います。",
+          "canDo": [
+            "ファンダイブのガイドができる",
+            "インストラクターの講習をアシストできる",
+            "一部のプログラム（スキンダイバーなど）を実施できる"
+          ],
+          "requirements": [
+            "最低年齢 18歳（15〜17歳はジュニア・ダイブマスター）",
+            "レスキュー・ダイバー取得済み",
+            "24か月以内のEFR講習修了",
+            "ログ本数：開始時 40本以上、認定時 60本以上",
+            "12か月以内の医師の診断"
+          ],
+          "next": "ai"
+        },
+        {
+          "id": "ai",
+          "short": "準インストラクター",
+          "nameJa": "アシスタント・インストラクター",
+          "nameEn": "Assistant Instructor",
+          "abbr": "AI",
+          "category": "pro",
+          "optional": true,
+          "one": "一部の講習を担当",
+          "summary": "ダイブマスターとインストラクターの間の任意のステップ。一部のコースを単独で指導できます。",
+          "canDo": [
+            "一部のコースを単独で指導できる",
+            "インストラクターの講習で知識開発などを担当できる",
+            "残りのIDCを受ければインストラクターへ進める"
+          ],
+          "requirements": [
+            "ダイブマスター（または同等のリーダーシップ資格）取得済み",
+            "インストラクター開発コース（IDC）のうちAIパートを修了"
+          ],
+          "next": "owsi"
+        },
+        {
+          "id": "owsi",
+          "short": "インストラクター",
+          "nameJa": "オープン・ウォーター・スクーバ・インストラクター",
+          "nameEn": "Open Water Scuba Instructor",
+          "abbr": "OWSI",
+          "category": "pro",
+          "optional": false,
+          "one": "すべての基本講習を担当",
+          "summary": "基本コースを一通り指導できるインストラクターです。",
+          "canDo": [
+            "オープン・ウォーターからダイブマスターまでのコースを指導・認定できる",
+            "スペシャルティ・インストラクターなど上位資格へ進める"
+          ],
+          "requirements": [
+            "IDCを修了し、インストラクター試験（IE）に合格",
+            "IDC参加には 18歳以上、ダイバー認定から6か月以上などの条件あり"
+          ],
+          "next": null
+        }
+      ]
+    },
+    {
+      "id": "ssi",
+      "name": "SSI",
+      "skip": null,
+      "notes": [
+        "レスキューに当たる資格名は「ダイバー・ストレス＆レスキュー」です。",
+        "プロの入口として「ダイブガイド」があり、そこからダイブマスターへ進みます。",
+        "取得条件の細かな数値は確認中です。SSI公式サイトまたはショップでご確認ください。"
+      ],
+      "steps": [
+        {
+          "id": "ow",
+          "short": "オープン・ウォーター",
+          "nameJa": "オープン・ウォーター・ダイバー",
+          "nameEn": "Open Water Diver",
+          "abbr": "OWD",
+          "category": "leisure",
+          "optional": false,
+          "one": "はじめての資格",
+          "summary": "最初に取る基本の資格。オンライン学習と実習を組み合わせて学びます。",
+          "canDo": [
+            "資格を持つバディと一緒に潜れる",
+            "ファンダイブやダイビングツアーに参加できる"
+          ],
+          "requirements": [
+            "前提資格なし",
+            "年齢などの条件は確認中（SSI公式・ショップでご確認ください）"
+          ],
+          "next": "aow"
+        },
+        {
+          "id": "aow",
+          "short": "アドバンスド・オープン・ウォーター",
+          "nameJa": "アドバンスド・オープン・ウォーター・ダイバー",
+          "nameEn": "Advanced Open Water Diver",
+          "abbr": "AOWD",
+          "category": "leisure",
+          "optional": false,
+          "one": "経験を広げる",
+          "summary": "いろいろな環境での経験を積み、潜れる範囲を広げます。",
+          "canDo": [
+            "潜れる環境・ポイントが広がる",
+            "スペシャルティで得意分野を伸ばせる"
+          ],
+          "requirements": [
+            "オープン・ウォーター・ダイバー取得済み",
+            "その他の条件は確認中"
+          ],
+          "next": "rd"
+        },
+        {
+          "id": "rd",
+          "short": "ストレス＆レスキュー",
+          "nameJa": "ダイバー・ストレス＆レスキュー",
+          "nameEn": "Diver Stress & Rescue",
+          "abbr": "S&R",
+          "category": "leisure",
+          "optional": false,
+          "one": "人を助ける力",
+          "summary": "ストレス（不安・緊張）への対処と、仲間の救助を学びます。プロへ進む前提になります。",
+          "canDo": [
+            "トラブルの兆しに気づき、予防できる",
+            "自分や仲間のトラブルに対処できる"
+          ],
+          "requirements": [
+            "前のステップの資格取得済み",
+            "その他の条件は確認中"
+          ],
+          "next": "dg"
+        },
+        {
+          "id": "dg",
+          "short": "ダイブガイド",
+          "nameJa": "ダイブガイド",
+          "nameEn": "Dive Guide",
+          "abbr": "DG",
+          "category": "pro",
+          "optional": false,
+          "one": "プロの入口",
+          "summary": "SSIのプロの入口。認定ダイバーを案内するガイドの資格です。",
+          "canDo": [
+            "認定ダイバーのファンダイブをガイドできる"
+          ],
+          "requirements": [
+            "ダイバー・ストレス＆レスキュー取得済み",
+            "その他の条件は確認中"
+          ],
+          "next": "dm"
+        },
+        {
+          "id": "dm",
+          "short": "ダイブマスター",
+          "nameJa": "ダイブマスター",
+          "nameEn": "Divemaster",
+          "abbr": "DM",
+          "category": "pro",
+          "optional": false,
+          "one": "ガイド・アシスト",
+          "summary": "ガイドに加え、インストラクターの講習をアシストできるプロの資格です。",
+          "canDo": [
+            "ファンダイブのガイドができる",
+            "インストラクターの講習をアシストできる"
+          ],
+          "requirements": [
+            "ダイブガイド取得済み",
+            "その他の条件は確認中"
+          ],
+          "next": "ai"
+        },
+        {
+          "id": "ai",
+          "short": "準インストラクター",
+          "nameJa": "アシスタント・インストラクター",
+          "nameEn": "Assistant Instructor",
+          "abbr": "AI",
+          "category": "pro",
+          "optional": false,
+          "one": "一部の講習を担当",
+          "summary": "インストラクターへの手前の段階。一部の講習を担当できます。",
+          "canDo": [
+            "一部のプログラムを指導できる"
+          ],
+          "requirements": [
+            "ダイブマスター取得済み",
+            "その他の条件は確認中"
+          ],
+          "next": "owi"
+        },
+        {
+          "id": "owi",
+          "short": "インストラクター",
+          "nameJa": "オープン・ウォーター・インストラクター",
+          "nameEn": "Open Water Instructor",
+          "abbr": "OWI",
+          "category": "pro",
+          "optional": false,
+          "one": "基本講習を担当",
+          "summary": "基本コースを指導できるインストラクターです。",
+          "canDo": [
+            "オープン・ウォーター・ダイバーなどの基本コースを指導できる"
+          ],
+          "requirements": [
+            "アシスタント・インストラクター取得済み",
+            "その他の条件は確認中"
+          ],
+          "next": null
+        }
+      ]
+    },
+    {
+      "id": "naui",
+      "name": "NAUI",
+      "skip": {
+        "from": "ai",
+        "to": "inst",
+        "label": "AIからもダイブマスターからもITC（インストラクター養成）へ進める"
+      },
+      "notes": [
+        "プロ（リーダーシップ）コースの前に「マスター・スクーバ・ダイバー」が必要です。",
+        "NAUIではダイブマスターがアシスタント・インストラクターより上の位置付けです。どちらからでもインストラクター養成コース（ITC）に進めます。",
+        "取得条件の細かな数値は確認中です。NAUI公式サイトまたはショップでご確認ください。"
+      ],
+      "steps": [
+        {
+          "id": "ow",
+          "short": "オープン・ウォーター・スクーバ",
+          "nameJa": "オープン・ウォーター・スクーバ・ダイバー",
+          "nameEn": "Scuba Diver (Open Water)",
+          "abbr": "OW",
+          "category": "leisure",
+          "optional": false,
+          "one": "はじめての資格",
+          "summary": "最初に取る基本の資格です。",
+          "canDo": [
+            "資格を持つバディと一緒に潜れる",
+            "ファンダイブやダイビングツアーに参加できる"
+          ],
+          "requirements": [
+            "前提資格なし",
+            "年齢などの条件は確認中（NAUI公式・ショップでご確認ください）"
+          ],
+          "next": "adv"
+        },
+        {
+          "id": "adv",
+          "short": "アドバンスド・スクーバ",
+          "nameJa": "アドバンスド・スクーバ・ダイバー",
+          "nameEn": "Advanced Scuba Diver",
+          "abbr": "ADV",
+          "category": "leisure",
+          "optional": false,
+          "one": "経験を広げる",
+          "summary": "いろいろな環境での経験を積み、潜れる範囲を広げます。",
+          "canDo": [
+            "潜れる環境・ポイントが広がる"
+          ],
+          "requirements": [
+            "オープン・ウォーター・スクーバ・ダイバー取得済み",
+            "その他の条件は確認中"
+          ],
+          "next": "rd"
+        },
+        {
+          "id": "rd",
+          "short": "レスキュー・スクーバ",
+          "nameJa": "レスキュー・スクーバ・ダイバー",
+          "nameEn": "Rescue Scuba Diver",
+          "abbr": "RSD",
+          "category": "leisure",
+          "optional": false,
+          "one": "人を助ける力",
+          "summary": "トラブルの予防と対処、仲間の救助を学びます。",
+          "canDo": [
+            "トラブルを予防し、早めに気づける",
+            "自分や仲間のトラブルに対処できる"
+          ],
+          "requirements": [
+            "前のステップの資格取得済み",
+            "その他の条件は確認中"
+          ],
+          "next": "msd"
+        },
+        {
+          "id": "msd",
+          "short": "マスター・スクーバ",
+          "nameJa": "マスター・スクーバ・ダイバー",
+          "nameEn": "Master Scuba Diver",
+          "abbr": "MSD",
+          "category": "leisure",
+          "optional": false,
+          "one": "プロの準備",
+          "summary": "レジャーダイバーの最上位。NAUIでプロ（リーダーシップ）コースに進むための前提資格です。",
+          "canDo": [
+            "高い知識と技術を持つダイバーとして認められる",
+            "リーダーシップコースに進める"
+          ],
+          "requirements": [
+            "前のステップの資格取得済み",
+            "その他の条件は確認中"
+          ],
+          "next": "ai"
+        },
+        {
+          "id": "ai",
+          "short": "準インストラクター",
+          "nameJa": "アシスタント・インストラクター",
+          "nameEn": "Assistant Instructor",
+          "abbr": "AI",
+          "category": "pro",
+          "optional": false,
+          "one": "講習の補助",
+          "summary": "インストラクターの講習を補助するリーダーシップ資格です。",
+          "canDo": [
+            "インストラクターの講習を補助できる"
+          ],
+          "requirements": [
+            "マスター・スクーバ・ダイバー取得済み",
+            "その他の条件は確認中"
+          ],
+          "next": "dm"
+        },
+        {
+          "id": "dm",
+          "short": "ダイブマスター",
+          "nameJa": "ダイブマスター",
+          "nameEn": "Divemaster",
+          "abbr": "DM",
+          "category": "pro",
+          "optional": false,
+          "one": "ガイド・アシスト",
+          "summary": "NAUIではアシスタント・インストラクターより上位のリーダーシップ資格です。",
+          "canDo": [
+            "ダイビングのガイドができる",
+            "講習のアシストができる"
+          ],
+          "requirements": [
+            "その他の条件は確認中"
+          ],
+          "next": "inst"
+        },
+        {
+          "id": "inst",
+          "short": "インストラクター",
+          "nameJa": "インストラクター",
+          "nameEn": "Instructor",
+          "abbr": "INST",
+          "category": "pro",
+          "optional": false,
+          "one": "講習を担当",
+          "summary": "インストラクター養成コース（ITC）を修了して認定されるインストラクターです。",
+          "canDo": [
+            "基本コースを指導・認定できる"
+          ],
+          "requirements": [
+            "ITC（インストラクター養成コース）修了",
+            "その他の条件は確認中"
+          ],
+          "next": null
+        }
+      ]
+    }
+  ],
+  "agencyProfiles": [
+    {
+      "name": "PADI（パディ）",
+      "fullName": "Professional Association of Diving Instructors",
+      "origin": "1966年・アメリカ",
+      "feature": "世界最大の指導団体。認定数が多く、海外のショップでも通じやすい。段階的にステップアップする教育システム"
+    },
+    {
+      "name": "NAUI（ナウイ）",
+      "fullName": "National Association of Underwater Instructors",
+      "origin": "1960年・アメリカ",
+      "feature": "非営利の指導者団体。教育の質を重視し、プロへ進む前にマスター・スクーバ・ダイバーが必要"
+    },
+    {
+      "name": "SSI（エスエスアイ）",
+      "fullName": "Scuba Schools International",
+      "origin": "1970年代・アメリカ",
+      "feature": "ダイビングショップ（販売店・トレーニングセンター）を軸にした団体。オンライン学習と実習を組み合わせる"
+    },
+    {
+      "name": "CMAS（クマス）",
+      "fullName": "世界水中連盟（Confédération Mondiale des Activités Subaquatiques）",
+      "origin": "ヨーロッパ",
+      "feature": "各国の連盟が加盟する国際組織。1〜4つ星の「スター制」で資格を表す。ヨーロッパで広く普及"
+    },
+    {
+      "name": "BSAC（ビーサック）",
+      "fullName": "British Sub-Aqua Club",
+      "origin": "1953年・イギリス",
+      "feature": "イギリス最大のダイビングクラブ。日本では BSAC JAPAN が1987年から活動"
+    },
+    {
+      "name": "国内団体（JP など）",
+      "fullName": "各団体",
+      "origin": "日本",
+      "feature": "日本発祥の指導団体。国内ショップでの講習が中心"
+    }
+  ],
+  "equivalence": [
+    {
+      "level": "はじめての資格",
+      "padi": "オープン・ウォーター・ダイバー",
+      "ssi": "オープン・ウォーター・ダイバー",
+      "naui": "オープン・ウォーター・スクーバ・ダイバー",
+      "cmas": "1スター・ダイバー"
+    },
+    {
+      "level": "経験を広げる",
+      "padi": "アドバンスド・オープン・ウォーター・ダイバー",
+      "ssi": "アドバンスド・オープン・ウォーター・ダイバー",
+      "naui": "アドバンスド・スクーバ・ダイバー",
+      "cmas": "2スター・ダイバー"
+    },
+    {
+      "level": "救助を学ぶ",
+      "padi": "レスキュー・ダイバー",
+      "ssi": "ダイバー・ストレス＆レスキュー",
+      "naui": "レスキュー・スクーバ・ダイバー",
+      "cmas": "（2〜3スターに含まれる）"
+    },
+    {
+      "level": "プロの準備",
+      "padi": "－",
+      "ssi": "－",
+      "naui": "マスター・スクーバ・ダイバー（プロコースの前提）",
+      "cmas": "－"
+    },
+    {
+      "level": "ガイド・アシスト",
+      "padi": "ダイブマスター",
+      "ssi": "ダイブガイド → ダイブマスター",
+      "naui": "ダイブマスター ※",
+      "cmas": "3スター・ダイバー"
+    },
+    {
+      "level": "準インストラクター",
+      "padi": "アシスタント・インストラクター",
+      "ssi": "アシスタント・インストラクター",
+      "naui": "アシスタント・インストラクター ※",
+      "cmas": "1スター・インストラクター"
+    },
+    {
+      "level": "インストラクター",
+      "padi": "オープン・ウォーター・スクーバ・インストラクター",
+      "ssi": "オープン・ウォーター・インストラクター",
+      "naui": "インストラクター",
+      "cmas": "2スター・インストラクター"
+    }
+  ],
+  "shops": {
+    "topCount": 5,
+    "note": "国土交通省の資料（令和6年12月現在、各団体HPのショップリストをもとに集計）より。1つのショップが複数団体に加盟している場合があります。",
+    "list": [
+      [
+        "PADI",
+        446
+      ],
+      [
+        "NAUI",
+        137
+      ],
+      [
+        "Stars",
+        115
+      ],
+      [
+        "JEFF",
+        94
+      ],
+      [
+        "JP",
+        93
+      ],
+      [
+        "BSAC",
+        90
+      ],
+      [
+        "SSI",
+        80
+      ],
+      [
+        "JCS",
+        71
+      ],
+      [
+        "SDI",
+        53
+      ],
+      [
+        "JUDF",
+        49
+      ],
+      [
+        "SNSI",
+        46
+      ],
+      [
+        "Three I",
+        12
+      ],
+      [
+        "KD",
+        11
+      ]
+    ]
+  },
+  "sources": [
+    [
+      "PADI「What’s the Difference Between Assistant Instructor and Open Water Scuba Instructor」",
+      "https://blog.padi.com/jp/whats-the-difference-between-assistant-instructor-and-open-water-scuba-instructor/"
+    ],
+    [
+      "PADI「PADI Divemaster Requirements」",
+      "https://blog.padi.com/padi-divemaster-requirements/"
+    ],
+    [
+      "PADI「PADI Diving Restrictions」",
+      "https://blog.padi.com/padi-diving-restrictions/"
+    ],
+    [
+      "PADI「Rescue Diver コース概要」",
+      "https://padi.com/node/1241"
+    ],
+    [
+      "PADI「Assistant Instructor」",
+      "https://padi.com/courses/assistant-instructor"
+    ],
+    [
+      "PADI「PADI Professional Levels」",
+      "https://blog.padi.com/padi-professional-levels/"
+    ],
+    [
+      "PADI「How to Become a Scuba Instructor」",
+      "https://www.padi.com/mx/en/blog/how-to-become-a-scuba-instructor"
+    ],
+    [
+      "PADI「PADIについて」",
+      "https://www.padi.com/ja/about"
+    ],
+    [
+      "SSI「From Enthusiast to Dive Professional」",
+      "https://www.divessi.com/en/blog/From-dive-enthusiast-to-dive-professional-1359"
+    ],
+    [
+      "SSI「Dive Guide」",
+      "https://divessi.com/professional/scuba-diving/dive-guide"
+    ],
+    [
+      "SSI「Assistant Instructor」",
+      "https://www.divessi.com/professional/scuba-diving/assistant-instructor"
+    ],
+    [
+      "NAUI「Training Progression」",
+      "https://naui.org/certifications/training-progression"
+    ],
+    [
+      "NAUI「Leadership Courses」",
+      "https://naui.org/certifications/leadership"
+    ],
+    [
+      "NAUI「Assistant Instructor」",
+      "https://www.naui.org/learn/leadership/assistant-instructor"
+    ],
+    [
+      "NAUI「Rescue Scuba Diver」",
+      "https://naui.org/certifications/entry-level/rescue-scuba-diver"
+    ],
+    [
+      "Wikipedia「Divemaster」",
+      "https://en.wikipedia.org/wiki/Divemaster"
+    ],
+    [
+      "Wikipedia「National Association of Underwater Instructors」",
+      "https://en.wikipedia.org/wiki/National_Association_of_Underwater_Instructors"
+    ],
+    [
+      "Scuba.com「Scuba Certification Agencies」",
+      "https://www.scuba.com/blog/scuba-guides/scuba-certification-agencies-padi-naui-bsac-cmas-and-more/"
+    ],
+    [
+      "アクティビティジャパン「ダイビングライセンスの種類の違い」",
+      "https://activityjapan.com/news/%ef%bc%88%e6%9b%b4%e6%96%b0%e7%94%a8%ef%bc%89%e3%83%80%e3%82%a4%e3%83%93%e3%83%b3%e3%82%b0%e3%83%a9%e3%82%a4%e3%82%bb%e3%83%b3%e3%82%b9%e7%a8%ae%e9%a1%9e%e3%81%ae%e9%81%95%e3%81%84/"
+    ],
+    [
+      "BSAC JAPAN",
+      "https://www.bsac.co.jp/en/"
+    ],
+    [
+      "国土交通省「ダイビング船事故防止に向けたアンケート調査の結果について」",
+      "https://www.mlit.go.jp/maritime/content/001886644.pdf"
+    ]
+  ]
+}

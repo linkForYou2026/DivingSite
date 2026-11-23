@@ -1,0 +1,48 @@
+{
+  "_note": "仕事メニュー（仕様書F-02）。料金は未定（Q-05）。",
+  "items": [
+    {
+      "id": "photo",
+      "name": "水中撮影・動画制作",
+      "description": "個人の記念撮影、企業・メディアの撮影",
+      "price": "〇〇円〜",
+      "icon": "📸"
+    },
+    {
+      "id": "guide",
+      "name": "ダイビングガイド",
+      "description": "指定スポットの案内",
+      "price": "〇〇円〜",
+      "icon": "🧭"
+    },
+    {
+      "id": "course",
+      "name": "講習・体験ダイビング",
+      "description": "資格講習、体験ダイビング",
+      "price": "〇〇円〜",
+      "icon": "🤿"
+    },
+    {
+      "id": "survey",
+      "name": "水中調査・マップ作り",
+      "description": "海底や生き物の調査、ポイントマップの作成",
+      "price": "要相談",
+      "icon": "🗺️"
+    },
+    {
+      "id": "media",
+      "name": "取材・出演・SNS発信",
+      "description": "記事や動画での紹介、PR",
+      "price": "要相談",
+      "icon": "🎬"
+    },
+    {
+      "id": "tour",
+      "name": "ツアー企画",
+      "description": "グループ向けのプランづくり",
+      "price": "要相談",
+      "icon": "🚤"
+    }
+  ],
+  "achievements": []
+}

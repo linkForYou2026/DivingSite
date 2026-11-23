@@ -1,0 +1,139 @@
+{
+  "_note": "費用の目安。金額は試作用のサンプル値です（単位：円）。",
+  "meta": {
+    "lastChecked": "2026-11-22",
+    "sample": true
+  },
+  "items": [
+    {
+      "key": "tour",
+      "label": "講習・ツアー代",
+      "color": "#0D47A1"
+    },
+    {
+      "key": "rental",
+      "label": "器材レンタル",
+      "color": "#1E88E5"
+    },
+    {
+      "key": "travel",
+      "label": "交通費",
+      "color": "#4FC3F7"
+    },
+    {
+      "key": "stay",
+      "label": "宿泊",
+      "color": "#26A69A"
+    },
+    {
+      "key": "other",
+      "label": "その他",
+      "color": "#B0BEC5"
+    }
+  ],
+  "plans": [
+    {
+      "name": "体験ダイビング",
+      "sub": "近場で日帰り・資格なしでOK",
+      "purpose": "講習の申し込み",
+      "cost": {
+        "tour": 15000,
+        "rental": 0,
+        "travel": 5000,
+        "stay": 0,
+        "other": 2000
+      },
+      "memo": "器材レンタル代は講習代に含まれることが多い"
+    },
+    {
+      "name": "資格取得（OW）",
+      "sub": "近場で2〜3日・はじめての資格",
+      "purpose": "講習の申し込み",
+      "cost": {
+        "tour": 70000,
+        "rental": 10000,
+        "travel": 10000,
+        "stay": 10000,
+        "other": 15000
+      },
+      "memo": "その他は教材・申請料など"
+    },
+    {
+      "name": "1泊2日の国内ツアー",
+      "sub": "沖縄で4本・資格を持っている人",
+      "purpose": "イベント参加",
+      "cost": {
+        "tour": 30000,
+        "rental": 8000,
+        "travel": 40000,
+        "stay": 10000,
+        "other": 5000
+      },
+      "memo": ""
+    },
+    {
+      "name": "ブランクからの再開",
+      "sub": "リフレッシュ講習＋1日",
+      "purpose": "ブランク相談",
+      "cost": {
+        "tour": 15000,
+        "rental": 5000,
+        "travel": 5000,
+        "stay": 0,
+        "other": 2000
+      },
+      "memo": ""
+    }
+  ],
+  "areas": [
+    {
+      "id": "near",
+      "label": "近場（伊豆など）",
+      "divePerDay": 15000,
+      "rentalPerDay": 5000,
+      "travel": 6000,
+      "stayPerNight": 9000,
+      "otherPerDay": 3000,
+      "flight": false
+    },
+    {
+      "id": "oki",
+      "label": "沖縄",
+      "divePerDay": 17000,
+      "rentalPerDay": 5000,
+      "travel": 45000,
+      "stayPerNight": 9000,
+      "otherPerDay": 3000,
+      "flight": true
+    },
+    {
+      "id": "asia",
+      "label": "海外（アジア近場）",
+      "divePerDay": 15000,
+      "rentalPerDay": 4000,
+      "travel": 80000,
+      "stayPerNight": 8000,
+      "otherPerDay": 3000,
+      "flight": true
+    }
+  ],
+  "days": [
+    {
+      "d": 1,
+      "label": "日帰り"
+    },
+    {
+      "d": 2,
+      "label": "1泊2日"
+    },
+    {
+      "d": 3,
+      "label": "2泊3日"
+    },
+    {
+      "d": 4,
+      "label": "3泊4日"
+    }
+  ],
+  "range": 0.15
+}

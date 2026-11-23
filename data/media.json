@@ -1,0 +1,11 @@
+{
+  "_note": "動画・SNSの埋め込み（仕様書F-08）。URLやIDを追加するだけで表示されます。",
+  "youtube": {
+    "_note": "playlistId は再生リストURLの list= の後ろ。videoIds は動画URLの v= の後ろ",
+    "playlistId": "",
+    "videoIds": []
+  },
+  "instagram": { "_note": "投稿のURL（https://www.instagram.com/p/xxxx/）", "posts": [] },
+  "tiktok": { "_note": "投稿のURL（https://www.tiktok.com/@user/video/1234567890）", "posts": [] },
+  "facebook": { "_note": "投稿のURL", "posts": [] }
+}

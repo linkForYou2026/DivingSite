@@ -1,0 +1,12 @@
+{
+  "_note": "ブログのカテゴリ（仕様書F-11）。記事のMarkdownの category には id を書きます。",
+  "items": [
+    { "id": "beginner", "label": "初心者向け" },
+    { "id": "spot", "label": "スポット紹介" },
+    { "id": "creature", "label": "生き物" },
+    { "id": "photo", "label": "撮影テクニック" },
+    { "id": "gear", "label": "機材レビュー" },
+    { "id": "career", "label": "仕事・キャリア" },
+    { "id": "event", "label": "イベントレポート" }
+  ]
+}

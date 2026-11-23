@@ -22,7 +22,10 @@
 app/              各ページ
 components/       共通部品（ヘッダー、フッター、カード、SNS埋め込み、FAQ など）
 content/blog/     ブログ記事（Markdown）
-data/             licenses.json, spots.json, creatures.json, events.json, faq.json, works.json, gear.json
+data/             site.json（サイト名・連絡先・フォーム・SNS）, licenses.json, spots.json, cost.json, events.json, faq.json,
+                  works.json, courses.json, voices.json, media.json, blog-categories.json
+                  （フェーズ2で creatures.json, gear.json を追加）
+lib/              データの読み込み（data.ts）、ブログ（blog.ts）、メニュー（nav.ts）、ページ情報（meta.ts）
 public/images/    写真
 docs/             仕様書
 ```
