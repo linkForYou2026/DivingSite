@@ -1,27 +1,33 @@
 # DivingSite
 
 ダイビング総合ポータルサイト（https://diving.link-since2026.jp）のソースコードです。
-仕様は `docs/ダイビング総合ポータルサイト_仕様書.md`、作業ルールは `CLAUDE.md` を見てください。
+仕様は `docs/` の仕様書、作業ルールは `CLAUDE.md` を見てください。
 
-## よくある更新と、書き換える場所
+## データの更新は管理画面から
 
-| やりたいこと | 書き換えるファイル |
+料金・イベント・スポット・資格・FAQ・お知らせ・サイト設定などは、**管理画面（/admin/）** で更新します。コードを触る必要はありません。
+はじめて使うときの設定は `docs/バックオフィス設定手順.md` を見てください。
+
+| データ | サイトに出るタイミング |
 |---|---|
-| サイト名・キャッチコピー・メール・電話・受付時間 | `data/site.json` |
-| お問い合わせを Googleフォームにつなぐ | `data/site.json` の `contactForm` |
-| SNSアイコンを出す | `data/site.json` の `sns` の `url` |
-| YouTube・Instagram などの動画・投稿を載せる | `data/media.json` |
-| イベントを追加する | `data/events.json` |
-| スポットを追加する | `data/spots.json` |
-| 資格の説明・取得条件 | `data/licenses.json` |
-| 費用の目安・モデルプラン | `data/cost.json` |
-| よくある質問 | `data/faq.json` |
-| 仕事メニュー・料金 | `data/works.json` |
-| 講習の一覧 | `data/courses.json` |
-| 参加者の声 | `data/voices.json` |
-| ブログ記事を書く | `content/blog/` に `.md` ファイルを追加 |
+| 料金（自社メニュー・モデルプラン・エリア単価）、イベント、お知らせ、受付時間・SNS | 保存するとすぐ（最大1分ほど遅れることがあります） |
+| 資格・指導団体、スポット、FAQ、参加者の声、動画・SNS投稿、サイト名・キャッチコピー | ダッシュボードの「サイトに反映」を押してから数分後 |
+
+ブログ記事は今のところ `content/blog/` に `.md` ファイルを追加して書きます。
+
+## フォルダの役割
+
+| フォルダ | 中身 |
+|---|---|
+| `app/` | 公開サイトの各ページと、管理画面（`app/admin/`） |
+| `components/` | 画面の部品（管理画面用は `components/admin/`） |
+| `functions/` | サーバー側の処理（Cloudflare Pages Functions）。`/api/...` の窓口・ログイン・権限チェック |
+| `shared/` | 公開サイト・管理画面・API で共通の定義（列挙値、権限、管理対象のテーブル、入力チェック） |
+| `migrations/` | データベース（D1）を作る・初期データを入れる SQL |
+| `lib/` | データの読み込み（組み立て時：`content.ts`、ページ表示時：`live.ts`）、ブログ |
+| `data/` | データベースが読めないときの初期値（サイト名、資格、FAQ）と、ブログのカテゴリ |
 
 ## 確認・公開
-1. `npm run dev` → http://localhost:3000 で確認
+1. `npm run dev` → http://localhost:3000 で見た目を確認（パソコンでは API が動かないため、料金・イベントは「読み込めませんでした」と表示されます）
 2. `npm run build` が成功することを確認
 3. GitHub Desktop で commit → push（Cloudflare が自動で公開）

@@ -2,13 +2,14 @@
 import Link from "next/link";
 import PageHeader from "@/components/PageHeader";
 import { STATIC_PAGES } from "@/lib/nav";
-import { spotsData } from "@/lib/data";
+import { getSpots } from "@/lib/content";
 import { getAllPosts } from "@/lib/blog";
 import { pageMeta } from "@/lib/meta";
 
 export const metadata = pageMeta("サイトマップ", "サイト内のページの一覧です。", "/site-map/");
 
-export default function Page() {
+export default async function Page() {
+  const { spots } = await getSpots();
   return (
     <>
       <PageHeader title="サイトマップ" />
@@ -22,7 +23,7 @@ export default function Page() {
         <section>
           <h2 className="font-bold text-pro">スポット</h2>
           <ul className="mt-2 list-disc space-y-1 pl-5 text-sm">
-            {spotsData.spots.map((s) => <li key={s.id}><Link href={`/spots/${s.id}/`} className="text-ocean underline">{s.name}</Link></li>)}
+            {spots.map((s) => <li key={s.slug}><Link href={`/spots/${s.slug}/`} className="text-ocean underline">{s.name}</Link></li>)}
           </ul>
         </section>
         <section>

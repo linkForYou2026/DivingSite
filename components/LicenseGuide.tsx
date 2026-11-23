@@ -1,10 +1,11 @@
 "use client";
 
 // 資格ステップアップガイド（仕様書 F-01／付録A）
-// データは data/licenses.json。文言を直すときは JSON だけを書き換えます
+// データは管理画面の「指導団体」「資格」（サイトに反映で更新）
 import Link from "next/link";
 import { Fragment, useState } from "react";
-import { Agency, LicenseStep, contactHref, licenses } from "@/lib/data";
+import { contactHref } from "@/lib/data";
+import type { AgencyView as Agency, LicenseStepView as LicenseStep, LicensesView } from "@/lib/content";
 
 const CIRCLED = ["①", "②", "③", "④", "⑤", "⑥", "⑦", "⑧", "⑨"];
 const CAT_LABEL = { leisure: "レジャー", pro: "プロ" } as const;
@@ -67,10 +68,11 @@ function Detail({ agency, step, onSelect }: { agency: Agency; step: LicenseStep;
   );
 }
 
-export default function LicenseGuide() {
+export default function LicenseGuide({ licenses }: { licenses: LicensesView }) {
   const [agencyId, setAgencyId] = useState(licenses.defaultAgency);
   const agency = licenses.agencies.find((a) => a.id === agencyId) ?? licenses.agencies[0];
-  const [selectedId, setSelectedId] = useState(agency.steps[0].id);
+  const [selectedId, setSelectedId] = useState(agency?.steps[0]?.id ?? "");
+  if (!agency) return <p className="rounded-xl bg-sky-50 p-6 text-center text-slate-600">資格ガイドは準備中です。</p>;
   const selected = agency.steps.find((s) => s.id === selectedId) ?? agency.steps[0];
   const steps = agency.steps;
   const n = steps.length;
@@ -86,8 +88,11 @@ export default function LicenseGuide() {
   const cols = steps.map(() => "minmax(0,1fr)").join(" 28px ");
   const lastLeisure = steps.reduce((acc, s, i) => (s.category === "leisure" ? i : acc), -1);
   const firstPro = steps.findIndex((s) => s.category === "pro");
-  const skipFrom = agency.skip ? steps.findIndex((s) => s.id === agency.skip!.from) : -1;
-  const skipTo = agency.skip ? steps.findIndex((s) => s.id === agency.skip!.to) : -1;
+  // 任意のステップは、前のステップから次のステップへ点線で「飛ばせる」ことを示す
+  const optIndex = steps.findIndex((s) => s.optional);
+  const skip = optIndex > 0 && optIndex < n - 1 ? { label: `「${steps[optIndex].nameJa}」は飛ばして進むこともできます` } : null;
+  const skipFrom = skip ? optIndex - 1 : -1;
+  const skipTo = skip ? optIndex + 1 : -1;
 
   return (
     <div>
@@ -115,7 +120,7 @@ export default function LicenseGuide() {
       {/* ステップアップ図 */}
       <div
         className="flex flex-col rounded-2xl border border-sky-100 bg-sky-50/60 p-3 md:grid md:gap-y-1.5 md:p-4"
-        style={{ gridTemplateColumns: cols, paddingBottom: agency.skip ? 30 : undefined }}
+        style={{ gridTemplateColumns: cols, paddingBottom: skip ? 30 : undefined }}
       >
         {lastLeisure >= 0 && (
           <div className="hidden rounded-md bg-sky-100 text-center text-xs font-bold text-leisure-ink md:block" style={{ gridRow: 1, gridColumn: `1 / ${2 * lastLeisure + 2}` }}>
@@ -141,10 +146,9 @@ export default function LicenseGuide() {
                 onClick={() => setSelectedId(s.id)}
               >
                 <span className="text-sm font-extrabold">{CIRCLED[i]}</span>
-                <span className="text-[15px] font-bold leading-snug md:text-[13px]">{s.short}</span>
+                <span className="text-[15px] font-bold leading-snug md:text-[13px]">{s.nameJa}</span>
                 <span className="text-xs opacity-85">{s.abbr}</span>
-                <span className="text-[13px] leading-snug md:text-xs">{s.one}</span>
-                {s.optional && agency.skip && <span className="text-xs md:hidden">※ このステップを飛ばして次へ進むことも可</span>}
+                {s.optional && <span className="text-xs md:hidden">※ このステップを飛ばして次へ進むことも可</span>}
                 <span className="mt-auto flex flex-wrap gap-1 pt-1">
                   <span className={`rounded px-1.5 text-[11px] font-bold ${s.category === "pro" && !s.optional ? "bg-white/20 text-white" : "bg-white/80 text-pro"}`}>
                     {CAT_LABEL[s.category]}
@@ -179,13 +183,13 @@ export default function LicenseGuide() {
             </Fragment>
           );
         })}
-        {agency.skip && skipFrom >= 0 && skipTo > skipFrom && (
+        {skip && skipFrom >= 0 && skipTo > skipFrom && (
           <div
             className="relative mx-6 hidden h-5 rounded-b-xl border-2 border-t-0 border-dashed border-pro md:block"
             style={{ gridRow: 3, gridColumn: `${2 * skipFrom + 1} / ${2 * skipTo + 2}` }}
           >
             <span className="absolute -bottom-3 left-1/2 -translate-x-1/2 whitespace-nowrap bg-sky-50 px-1.5 text-xs text-pro">
-              {agency.skip.label}
+              {skip.label}
             </span>
           </div>
         )}

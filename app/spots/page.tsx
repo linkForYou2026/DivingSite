@@ -2,7 +2,8 @@
 import PageHeader from "@/components/PageHeader";
 import SpotSearch from "@/components/SpotSearch";
 import ContactBand from "@/components/ContactBand";
-import { spotsData } from "@/lib/data";
+import PriceNotice from "@/components/PriceNotice";
+import { getSpots } from "@/lib/content";
 import { pageMeta } from "@/lib/meta";
 
 export const metadata = pageMeta(
@@ -11,18 +12,22 @@ export const metadata = pageMeta(
   "/spots/",
 );
 
-export default function Page() {
+export default async function Page() {
+  const { spots, purposes } = await getSpots();
   return (
     <>
       <PageHeader title="海・スポットを探す" lead="見たいもの・行きたいエリア・費用から、ぴったりの海を探せます。" />
       <div className="mx-auto max-w-6xl px-4 pt-8">
-        <SpotSearch />
-        <p className="mt-6 rounded-xl bg-sky-50 px-4 py-3 text-xs text-slate-600">
-          ※ 費用は1人あたりの目安（ダイビング代・宿泊・交通費などを含む概算）で、時期や出発地により変わります。
-          {spotsData.meta.sample && <><br />※ <strong>掲載しているデータは仮のサンプルです。</strong></>}
-          <br />最終確認日：{spotsData.meta.lastChecked}
-        </p>
-        <ContactBand title="行き先に迷ったら" text="見たい生き物や予算を教えていただければ、おすすめの海をご提案します。" button="相談する" />
+        {spots.length ? (
+          <>
+            <SpotSearch spots={spots} purposes={purposes.map((p) => p.name)} />
+            <p className="mt-6 text-xs text-slate-600">費用は1人あたりの目安（ダイビング代・宿泊・交通費などを含む概算）で、時期や出発地により変わります。</p>
+            <PriceNotice className="mt-2" />
+          </>
+        ) : (
+          <p className="rounded-xl bg-sky-50 p-6 text-center text-slate-600">スポット情報は準備中です。</p>
+        )}
+        <ContactBand title="行き先に迷ったら" text="見たい生き物や予算を教えていただければ、おすすめの海をご提案します。" button="相談する" purpose="other" />
       </div>
     </>
   );

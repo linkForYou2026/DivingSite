@@ -1,7 +1,7 @@
 // フッター（仕様書 5.2）
 import Link from "next/link";
-import { site } from "@/lib/data";
 import SnsIcons from "./SnsIcons";
+import ContactHours from "./ContactHours";
 
 const COLS: { title: string; links: [string, string][] }[] = [
   {
@@ -34,18 +34,15 @@ const COLS: { title: string; links: [string, string][] }[] = [
   },
 ];
 
-export default function Footer() {
-  const c = site.contact;
+export default function Footer({ siteName, tagline }: { siteName: string; tagline: string }) {
   return (
     <footer className="mt-16 bg-ocean-deep text-sm text-slate-300">
       <div className="mx-auto grid max-w-6xl gap-8 px-4 py-10 md:grid-cols-[1.3fr_1fr_1fr_1fr]">
         <div>
-          <p className="text-lg font-extrabold text-white">{site.name}</p>
-          <p className="mt-1">{site.tagline}</p>
+          <p className="text-lg font-extrabold text-white">{siteName}</p>
+          <p className="mt-1">{tagline}</p>
           <p className="mt-3 leading-relaxed">
-            {c.email ? <>メール：{c.email}<br /></> : null}
-            {c.tel ? <>電話：{c.tel}<br /></> : null}
-            {c.hours ? <>{c.hours}<br /></> : null}
+            <ContactHours />
             <Link href="/contact/" className="text-sky-200 underline">お問い合わせフォーム</Link>
           </p>
           <SnsIcons className="mt-4" />
@@ -69,7 +66,7 @@ export default function Footer() {
           <Link href="/privacy/" className="hover:underline">プライバシーポリシー</Link>
           <Link href="/ads/" className="hover:underline">広告・アフィリエイトについて</Link>
           <Link href="/site-map/" className="hover:underline">サイトマップ</Link>
-          <span className="w-full md:ml-auto md:w-auto">© 2026 {site.name}</span>
+          <span className="w-full md:ml-auto md:w-auto">© 2026 {siteName}</span>
         </div>
       </div>
     </footer>

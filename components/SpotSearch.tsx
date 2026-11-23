@@ -2,8 +2,18 @@
 
 // 目的別スポット検索（仕様書 F-04）。データは data/spots.json
 import { useEffect, useMemo, useState } from "react";
-import { spotsData } from "@/lib/data";
+import type { SpotView } from "@/lib/content";
+import { DIVE_LEVEL, DIVE_LEVEL_RANK } from "@/shared/enums";
 import SpotCard from "./SpotCard";
+
+const LEVELS = (["none", "ow", "aow"] as const).map((id) => ({ id, label: DIVE_LEVEL[id] }));
+const BUDGETS = [
+  { max: 0, label: "費用の上限：指定なし" },
+  { max: 30000, label: "〜3万円" },
+  { max: 100000, label: "〜10万円" },
+  { max: 200000, label: "〜20万円" },
+  { max: 400000, label: "〜40万円" },
+];
 
 type State = { purposes: string[]; levels: string[]; region: string; area: string; budget: number; month: number };
 const EMPTY: State = { purposes: [], levels: [], region: "", area: "", budget: 0, month: 0 };
@@ -23,9 +33,10 @@ function Chip({ on, label, onClick }: { on: boolean; label: string; onClick: () 
 
 const selectCls = "max-w-full rounded-lg border-[1.5px] border-sky-100 bg-white px-2 py-1.5 text-sm";
 
-export default function SpotSearch() {
+export default function SpotSearch({ spots, purposes }: { spots: SpotView[]; purposes: string[] }) {
   const [st, setSt] = useState<State>(EMPTY);
-  const { spots, purposes, levels, budgets } = spotsData;
+  const levels = LEVELS;
+  const budgets = BUDGETS;
 
   // URL の ?purpose=沈船 を読み取って最初から選んでおく（トップの「目的から探す」から来たとき）
   useEffect(() => {
@@ -33,9 +44,9 @@ export default function SpotSearch() {
     if (p && purposes.includes(p)) setSt((s) => ({ ...s, purposes: [p] }));
   }, [purposes]);
 
-  const rank = (id: string) => levels.find((l) => l.id === id)?.rank ?? 0;
+  const rank = (id: string) => DIVE_LEVEL_RANK[id] ?? 0;
   const areas = useMemo(
-    () => Array.from(new Set(spots.filter((s) => !st.region || s.region === st.region).map((s) => s.area))),
+    () => Array.from(new Set(spots.filter((s) => !st.region || s.regionLabel === st.region).map((s) => s.area))),
     [spots, st.region],
   );
   const toggle = (key: "purposes" | "levels", v: string) =>
@@ -44,15 +55,15 @@ export default function SpotSearch() {
   const list = spots
     .filter((s) => {
       if (st.purposes.length && !st.purposes.some((p) => s.purposes.includes(p))) return false;
-      if (st.region && s.region !== st.region) return false;
+      if (st.region && s.regionLabel !== st.region) return false;
       if (st.area && s.area !== st.area) return false;
       // レベル：選んだレベルのうち最も高いもので潜れるスポット
       if (st.levels.length && rank(s.level) > Math.max(...st.levels.map(rank))) return false;
-      if (st.budget && s.cost > st.budget) return false;
+      if (st.budget && (s.cost === null || s.cost > st.budget)) return false;
       if (st.month && !s.months.includes(st.month)) return false;
       return true;
     })
-    .sort((a, b) => a.cost - b.cost);
+    .sort((a, b) => (a.cost ?? Infinity) - (b.cost ?? Infinity));
 
   return (
     <div>
@@ -103,7 +114,7 @@ export default function SpotSearch() {
 
       {list.length ? (
         <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {list.map((s) => <SpotCard key={s.id} spot={s} />)}
+          {list.map((s) => <SpotCard key={s.slug} spot={s} />)}
         </div>
       ) : (
         <p className="mt-4 rounded-xl bg-sky-50 p-6 text-center text-slate-600">条件に合うスポットが見つかりませんでした。条件を減らしてみてください。</p>

@@ -4,7 +4,7 @@ import Section from "@/components/Section";
 import ModelPlans from "@/components/ModelPlans";
 import CostSimulator from "@/components/CostSimulator";
 import ContactBand from "@/components/ContactBand";
-import { costData } from "@/lib/data";
+import PriceNotice from "@/components/PriceNotice";
 import { pageMeta } from "@/lib/meta";
 
 export const metadata = pageMeta(
@@ -28,11 +28,7 @@ export default function Page() {
         <Section title="かんたん費用シミュレーター" lead="行き先・日数・器材レンタルを選ぶと、合計の目安が分かります。">
           <CostSimulator />
         </Section>
-        <p className="mt-6 rounded-xl bg-sky-50 px-4 py-3 text-xs text-slate-600">
-          ※ 金額は1人あたりの概算です。時期・ショップ・出発地により大きく変わります。
-          {costData.meta.sample && <><br />※ <strong>表示している金額は仮のサンプル値です。</strong></>}
-          <br />最終確認日：{costData.meta.lastChecked}
-        </p>
+        <PriceNotice className="mt-6" />
         <ContactBand />
       </div>
     </>

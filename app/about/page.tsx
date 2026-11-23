@@ -1,16 +1,17 @@
 // 運営者情報
 import PageHeader from "@/components/PageHeader";
 import { site } from "@/lib/data";
+import { getSiteText } from "@/lib/content";
 import { pageMeta } from "@/lib/meta";
 
-export const metadata = pageMeta("運営者情報", `${site.name}の運営者情報です。`, "/about/");
+export const metadata = pageMeta("運営者情報", "このサイトの運営者情報です。", "/about/");
 
-export default function Page() {
+export default async function Page() {
+  const { name } = await getSiteText();
   const rows: [string, string][] = [
-    ["サイト名", site.name],
+    ["サイト名", name],
     ["URL", site.url],
-    ["運営者", site.operator.name || "準備中"],
-    ["お問い合わせ", site.contact.email || "お問い合わせフォームから"],
+    ["お問い合わせ", "お問い合わせフォームから"],
   ];
   return (
     <>
@@ -24,7 +25,6 @@ export default function Page() {
             </div>
           ))}
         </dl>
-        {site.operator.note && <p className="mt-4 text-sm text-slate-600">{site.operator.note}</p>}
       </div>
     </>
   );

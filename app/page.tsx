@@ -3,10 +3,12 @@ import Link from "next/link";
 import Section from "@/components/Section";
 import SpotCard from "@/components/SpotCard";
 import EventList from "@/components/EventList";
-import WorkCards from "@/components/WorkCards";
+import ServiceCards from "@/components/ServiceCards";
 import ContactBand from "@/components/ContactBand";
-import { YouTubeEmbed, InstagramEmbed } from "@/components/SocialEmbeds";
-import { site, spotsData, voices } from "@/lib/data";
+import NoticeList from "@/components/NoticeList";
+import SocialEmbeds from "@/components/SocialEmbeds";
+import { site } from "@/lib/data";
+import { getEmbeds, getSiteText, getSpots, getTestimonials } from "@/lib/content";
 import { formatDate, getAllPosts } from "@/lib/blog";
 
 const DOORS = [
@@ -15,17 +17,12 @@ const DOORS = [
   { label: "潜りに行きたい", sub: "目的・エリアで探す", href: "/spots/" },
   { label: "仕事を頼みたい", sub: "撮影・ガイド・講習", href: "/work/" },
 ];
-
-const PURPOSE_ICONS: Record<string, string> = {
-  サンゴ礁: "🪸", 沈船: "⚓", "地形・洞窟": "🪨", 大物: "🦈", マクロ: "🦐", 透明度: "💎",
-};
 const PURPOSE_LABEL: Record<string, string> = { 透明度: "綺麗な海", マクロ: "マクロ（小さな生き物）" };
 
-export default function Home() {
-  const popular = spotsData.spots
-    .filter((s) => s.popularRank)
-    .sort((a, b) => (a.popularRank ?? 0) - (b.popularRank ?? 0))
-    .slice(0, 5);
+export default async function Home() {
+  const [{ catchCopy }, { spots, purposes }, voices, embeds] = await Promise.all([getSiteText(), getSpots(), getTestimonials(), getEmbeds()]);
+  const popular = spots.slice(0, 5);
+  const topEmbeds = embeds.filter((e) => !e.relatedKind || e.relatedKind === "top");
   const posts = getAllPosts().slice(0, 4);
 
   return (
@@ -33,9 +30,9 @@ export default function Home() {
       {/* 1. メインビジュアル */}
       <div className="relative overflow-hidden bg-[radial-gradient(ellipse_at_20%_0%,rgba(179,229,252,0.55),transparent_55%),linear-gradient(180deg,#0288d1_0%,#01579b_55%,#062a4f_100%)] text-white">
         <div className="relative z-10 mx-auto max-w-6xl px-4 pb-24 pt-12 md:pt-16">
-          <p className="text-xs tracking-[0.25em] opacity-90 md:text-sm">{site.tagline}</p>
+          {catchCopy.join("") !== site.tagline && <p className="text-xs tracking-[0.25em] opacity-90 md:text-sm">{site.tagline}</p>}
           <h1 className="mt-2 text-3xl font-bold leading-snug drop-shadow md:text-5xl">
-            {site.catchCopy.map((line, i) => (
+            {catchCopy.map((line, i) => (
               <span key={i} className="block">{line}</span>
             ))}
           </h1>
@@ -58,28 +55,32 @@ export default function Home() {
 
       <div className="mx-auto max-w-6xl px-4">
         {/* 2. 目的から探す */}
-        <Section title="目的から探す" en="PURPOSE" lead="見たいもの・やりたいことから、ぴったりの海が見つかります。">
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
-            {spotsData.purposes.map((p) => (
-              <Link
-                key={p}
-                href={`/spots/?purpose=${encodeURIComponent(p)}`}
-                className="flex flex-col items-center gap-1.5 rounded-2xl border border-sky-100 bg-white px-2 py-4 text-sm font-bold hover:border-ocean hover:text-pro"
-              >
-                <span className="flex h-12 w-12 items-center justify-center rounded-full bg-sky-100 text-2xl" aria-hidden="true">{PURPOSE_ICONS[p] ?? "🌊"}</span>
-                {PURPOSE_LABEL[p] ?? p}
-              </Link>
-            ))}
-          </div>
-        </Section>
+        {purposes.length > 0 && (
+          <Section title="目的から探す" en="PURPOSE" lead="見たいもの・やりたいことから、ぴったりの海が見つかります。">
+            <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
+              {purposes.map((p) => (
+                <Link
+                  key={p.name}
+                  href={`/spots/?purpose=${encodeURIComponent(p.name)}`}
+                  className="flex flex-col items-center gap-1.5 rounded-2xl border border-sky-100 bg-white px-2 py-4 text-sm font-bold hover:border-ocean hover:text-pro"
+                >
+                  <span className="flex h-12 w-12 items-center justify-center rounded-full bg-sky-100 text-2xl" aria-hidden="true">{p.icon || "🌊"}</span>
+                  {PURPOSE_LABEL[p.name] ?? p.name}
+                </Link>
+              ))}
+            </div>
+          </Section>
+        )}
 
         {/* 3. 人気のスポット */}
-        <Section title="人気のスポット" en="RANKING">
-          <div className="grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-5">
-            {popular.map((s) => <SpotCard key={s.id} spot={s} rank={s.popularRank ?? undefined} />)}
-          </div>
-          <p className="mt-3 text-right text-sm"><Link href="/spots/" className="text-ocean underline">スポットをもっと探す →</Link></p>
-        </Section>
+        {popular.length > 0 && (
+          <Section title="人気のスポット" en="RANKING">
+            <div className="grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-5">
+              {popular.map((s) => <SpotCard key={s.slug} spot={s} rank={s.rank} />)}
+            </div>
+            <p className="mt-3 text-right text-sm"><Link href="/spots/" className="text-ocean underline">スポットをもっと探す →</Link></p>
+          </Section>
+        )}
 
         {/* 4. 次のイベント */}
         <Section title="次のイベント" en="EVENT">
@@ -104,17 +105,17 @@ export default function Home() {
         </Section>
 
         {/* 6. 動画・SNS */}
-        <Section title="動画・SNS" en="MOVIE & SNS">
-          <div className="grid gap-4 md:grid-cols-2">
-            <YouTubeEmbed compact />
-            <InstagramEmbed limit={1} />
-          </div>
-        </Section>
+        {topEmbeds.length > 0 && (
+          <Section title="動画・SNS" en="MOVIE & SNS">
+            <SocialEmbeds embeds={topEmbeds} platforms={["youtube", "youtube_playlist", "instagram", "tiktok", "facebook"]} limit={3} emptyTitle="動画・SNS" />
+          </Section>
+        )}
 
         <div className="grid gap-x-8 md:grid-cols-2">
           {/* 7. お知らせ・新着記事 */}
           <Section title="お知らせ・新着記事" en="NEWS">
-            {posts.length ? (
+            <NoticeList />
+            {posts.length > 0 && (
               <ul>
                 {posts.map((p) => (
                   <li key={p.slug} className="flex gap-3 border-b border-dotted border-sky-100 py-2 text-sm">
@@ -123,28 +124,28 @@ export default function Home() {
                   </li>
                 ))}
               </ul>
-            ) : (
-              <p className="text-sm text-slate-600">記事は準備中です。</p>
             )}
             <p className="mt-3 text-right text-sm"><Link href="/blog/" className="text-ocean underline">ブログ一覧へ →</Link></p>
           </Section>
 
           {/* 8. 参加者の声 */}
-          <Section title="参加者の声" en="VOICE">
-            <div className="grid gap-3">
-              {voices.items.map((v) => (
-                <figure key={v.text} className="rounded-2xl border border-sky-100 bg-white p-4 text-sm">
-                  <blockquote>“{v.text}”</blockquote>
-                  <figcaption className="mt-1.5 text-xs text-slate-500">{v.who}</figcaption>
-                </figure>
-              ))}
-            </div>
-          </Section>
+          {voices.length > 0 && (
+            <Section title="参加者の声" en="VOICE">
+              <div className="grid gap-3">
+                {voices.map((v) => (
+                  <figure key={v.text} className="rounded-2xl border border-sky-100 bg-white p-4 text-sm">
+                    <blockquote>“{v.text}”</blockquote>
+                    <figcaption className="mt-1.5 text-xs text-slate-500">{v.who}</figcaption>
+                  </figure>
+                ))}
+              </div>
+            </Section>
+          )}
         </div>
 
         {/* 9. ダイビングの仕事 */}
-        <Section title="ダイビングの仕事" en="WORK" lead="水中撮影、ガイド、講習、調査など、ダイビングに関するお仕事をお受けしています。">
-          <WorkCards limit={3} withButton={false} />
+        <Section title="ダイビングの仕事" en="WORK" lead="水中撮影、ガイド、調査など、ダイビングに関するお仕事をお受けしています。">
+          <ServiceCards limit={3} withButton={false} />
           <p className="mt-3 text-right text-sm"><Link href="/work/" className="text-ocean underline">仕事メニュー・料金を見る →</Link></p>
         </Section>
 

@@ -1,15 +1,25 @@
-// SNSアイコン。data/site.json の sns に URL を入れると表示されます
-import { site } from "@/lib/data";
+"use client";
+
+// SNSアイコン。管理画面の「サイト設定」で各SNSのURLを入れると表示されます
+import { usePublicSettings } from "@/lib/live";
+
+const SNS = [
+  { key: "sns_instagram", label: "Instagram", short: "IG", color: "#d6249f" },
+  { key: "sns_youtube", label: "YouTube", short: "YT", color: "#ff0000" },
+  { key: "sns_tiktok", label: "TikTok", short: "TT", color: "#111111" },
+  { key: "sns_facebook", label: "Facebook", short: "FB", color: "#1877f2" },
+];
 
 export default function SnsIcons({ className = "" }: { className?: string }) {
-  const list = site.sns.filter((s) => s.url);
-  if (!list.length) return <p className={`text-xs opacity-80 ${className}`}>SNSは準備中です</p>;
+  const { data } = usePublicSettings();
+  const list = SNS.filter((s) => data?.[s.key]);
+  if (!list.length) return null;
   return (
     <ul className={`flex flex-wrap gap-2 ${className}`} aria-label="SNS">
       {list.map((s) => (
-        <li key={s.id}>
+        <li key={s.key}>
           <a
-            href={s.url}
+            href={data![s.key]!}
             target="_blank"
             rel="noopener noreferrer"
             title={s.label}
