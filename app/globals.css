@@ -1,0 +1,16 @@
+@import "tailwindcss";
+
+/* サイト共通の色（仕様書 付録A・9章） */
+@theme {
+  --color-leisure: #4fc3f7;
+  --color-pro: #0d47a1;
+  --color-ocean-deep: #062a4f;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: "Hiragino Kaku Gothic ProN", "Hiragino Sans", "Noto Sans JP", Meiryo, sans-serif;
+}

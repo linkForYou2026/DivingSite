@@ -1,0 +1,19 @@
+# 依存パッケージ
+/node_modules
+
+# Next.js のビルド結果
+/.next/
+/out/
+
+# TypeScript
+*.tsbuildinfo
+next-env.d.ts
+
+# 環境変数・秘密情報
+.env*
+
+# OS・エディタ
+.DS_Store
+Thumbs.db
+desktop.ini
+*.log
