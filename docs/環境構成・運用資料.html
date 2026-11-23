@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ダイビング総合ポータルサイト 環境構成・運用資料</title>
+<style>
+  :root {
+    --ink: #0f2233;
+    --quiet: #5b6b78;
+    --line: #d5dde3;
+    --bg: #f6f9fb;
+    --card: #ffffff;
+    --accent: #0d47a1;
+    --accent-soft: #e3edf9;
+    --leisure: #4fc3f7;
+    --warn-bg: #fff6e5;
+    --warn-line: #f0b44c;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: "Hiragino Kaku Gothic ProN", "Hiragino Sans", "Noto Sans JP", Meiryo, sans-serif;
+    color: var(--ink);
+    background: var(--bg);
+    line-height: 1.75;
+    font-size: 15px;
+  }
+  header {
+    background: linear-gradient(135deg, var(--leisure), var(--accent));
+    color: #fff;
+    padding: 40px 24px 32px;
+  }
+  header .inner, main { max-width: 920px; margin: 0 auto; }
+  header h1 { margin: 0 0 8px; font-size: 26px; line-height: 1.4; }
+  header p { margin: 0; opacity: .9; font-size: 14px; }
+  nav.toc {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 16px 24px;
+    margin: 24px 0;
+  }
+  nav.toc strong { display: block; margin-bottom: 4px; }
+  nav.toc ol { margin: 0; padding-left: 20px; columns: 2; column-gap: 32px; }
+  nav.toc a { color: var(--accent); text-decoration: none; }
+  nav.toc a:hover { text-decoration: underline; }
+  main { padding: 0 24px 64px; }
+  section {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 24px 28px;
+    margin-bottom: 24px;
+  }
+  h2 {
+    margin: 0 0 12px;
+    font-size: 20px;
+    padding-left: 12px;
+    border-left: 4px solid var(--accent);
+  }
+  h3 { font-size: 16px; margin: 24px 0 8px; }
+  p { margin: 0 0 12px; }
+  .lead { font-weight: 600; }
+  code {
+    font-family: Consolas, "SFMono-Regular", Menlo, monospace;
+    background: #eef2f5;
+    padding: 1px 6px;
+    border-radius: 4px;
+    font-size: .9em;
+    word-break: break-all;
+  }
+  pre {
+    background: #0f2233;
+    color: #e6eef5;
+    padding: 16px;
+    border-radius: 8px;
+    overflow-x: auto;
+    font-size: 13px;
+    line-height: 1.6;
+  }
+  pre code { background: none; padding: 0; color: inherit; word-break: normal; }
+  .table-wrap { overflow-x: auto; margin: 8px 0 16px; }
+  table { border-collapse: collapse; width: 100%; min-width: 560px; font-size: 14px; }
+  th, td { border: 1px solid var(--line); padding: 8px 12px; text-align: left; vertical-align: top; }
+  th { background: var(--accent-soft); white-space: nowrap; }
+  ul, ol { margin: 0 0 12px; padding-left: 22px; }
+  li { margin-bottom: 4px; }
+  .warn {
+    background: var(--warn-bg);
+    border: 1px solid var(--warn-line);
+    border-radius: 8px;
+    padding: 12px 16px;
+    margin: 12px 0;
+  }
+  .diagram { overflow-x: auto; }
+  .diagram svg { width: 100%; min-width: 600px; height: auto; display: block; }
+  .tasks { list-style: none; padding-left: 0; }
+  .tasks li { display: flex; gap: 10px; align-items: flex-start; }
+  .tasks input { margin-top: 6px; width: 16px; height: 16px; flex: none; }
+  a { color: var(--accent); }
+  footer { text-align: center; color: var(--quiet); font-size: 12px; padding-bottom: 32px; }
+  @media (max-width: 640px) {
+    header h1 { font-size: 21px; }
+    section { padding: 20px 18px; }
+    nav.toc ol { columns: 1; }
+  }
+  @media print {
+    body { background: #fff; }
+    header { background: none; color: var(--ink); border-bottom: 2px solid var(--accent); }
+    section { break-inside: avoid; border: none; padding: 0 0 16px; }
+    nav.toc { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="inner">
+    <h1>ダイビング総合ポータルサイト 環境構成・運用資料</h1>
+    <p>作成日：2026-11-23 ／ 公開URL：https://diving.link-since2026.jp（接続作業中）</p>
+  </div>
+</header>
+
+<main>
+
+<nav class="toc">
+  <strong>目次</strong>
+  <ol>
+    <li><a href="#overview">全体像</a></li>
+    <li><a href="#services">使っているサービス一覧</a></li>
+    <li><a href="#github">GitHub</a></li>
+    <li><a href="#cloudflare">Cloudflare Pages</a></li>
+    <li><a href="#muumuu">ムームードメイン／ムームーDNS</a></li>
+    <li><a href="#workspace">Google Workspace と作業フォルダ</a></li>
+    <li><a href="#pc">パソコンの開発環境</a></li>
+    <li><a href="#source">サイトのソースコード</a></li>
+    <li><a href="#flow">更新から公開までの流れ</a></li>
+    <li><a href="#trouble">注意事項とトラブルの記録</a></li>
+    <li><a href="#cost">費用と更新期限</a></li>
+    <li><a href="#todo">残っている作業</a></li>
+  </ol>
+</nav>
+
+<!-- 1. 全体像 -->
+<section id="overview">
+  <h2>全体像</h2>
+  <p class="lead">コードを GitHub に push すると Cloudflare Pages が自動で公開し、ムームーDNS の CNAME 1行で <code>diving.link-since2026.jp</code> につながります。</p>
+  <div class="diagram">
+    <svg viewBox="0 0 760 426" role="img" aria-label="push すると自動で公開、ドメインは CNAME 1行でつながる" font-size="13" font-family="inherit">
+      <defs>
+        <marker id="env-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+          <path d="M0 0L10 5L0 10z" fill="#9aa8b3"/>
+        </marker>
+      </defs>
+      <text x="24" y="30" font-size="15" font-weight="600" fill="#0f2233">push すると自動で公開、ドメインは CNAME 1行でつながる</text>
+      <text x="24" y="60" font-size="11.5" fill="#5b6b78">サイトを更新するとき</text>
+      <text x="24" y="190" font-size="11.5" fill="#5b6b78">訪問者が見るとき</text>
+
+      <g fill="none" stroke="#9aa8b3" stroke-width="1.25">
+        <path d="M240 106H272" marker-end="url(#env-arrow)"/>
+        <path d="M488 106H520" marker-end="url(#env-arrow)"/>
+        <path d="M628 142V200" marker-end="url(#env-arrow)"/>
+        <path d="M240 236H272" marker-end="url(#env-arrow)"/>
+        <path d="M488 236H520" marker-end="url(#env-arrow)"/>
+        <path d="M380 272V330" stroke-dasharray="4 4"/>
+      </g>
+      <text x="504" y="98" text-anchor="middle" font-size="11.5" fill="#5b6b78">push</text>
+      <text x="636" y="176" font-size="11.5" fill="#5b6b78">自動でビルド開始</text>
+      <text x="388" y="306" font-size="11.5" fill="#5b6b78">同じドメインのメール設定</text>
+
+      <!-- Claude -->
+      <rect x="24" y="70" width="216" height="72" rx="8" fill="#fff" stroke="#9aa8b3" stroke-width="1.25"/>
+      <text x="36" y="94" font-weight="600" fill="#0f2233">Claude（Code タブ）</text>
+      <text x="36" y="116" font-size="11.5" fill="#5b6b78">コードを作成・修正</text>
+      <!-- PC -->
+      <rect x="272" y="70" width="216" height="72" rx="8" fill="#fff" stroke="#9aa8b3" stroke-width="1.25"/>
+      <text x="284" y="94" font-weight="600" fill="#0f2233">パソコンの作業フォルダ</text>
+      <text x="284" y="116" font-size="11.5" fill="#5b6b78">HomePage\DivingSite</text>
+      <text x="284" y="132" font-size="11.5" fill="#5b6b78">Googleドライブで同期</text>
+      <!-- GitHub -->
+      <rect x="520" y="70" width="216" height="72" rx="8" fill="#fff" stroke="#9aa8b3" stroke-width="1.25"/>
+      <text x="532" y="94" font-weight="600" fill="#0f2233">GitHub</text>
+      <text x="532" y="116" font-size="11.5" fill="#5b6b78">linkForYou2026/DivingSite</text>
+      <text x="532" y="132" font-size="11.5" fill="#5b6b78">main ブランチ</text>
+      <!-- Visitor -->
+      <rect x="24" y="200" width="216" height="72" rx="8" fill="#fff" stroke="#9aa8b3" stroke-width="1.25"/>
+      <text x="36" y="224" font-weight="600" fill="#0f2233">訪問者</text>
+      <text x="36" y="246" font-size="11.5" fill="#5b6b78">diving.link-since2026.jp</text>
+      <text x="36" y="262" font-size="11.5" fill="#5b6b78">をスマホ・PCで開く</text>
+      <!-- DNS -->
+      <rect x="272" y="200" width="216" height="72" rx="8" fill="#fff" stroke="#9aa8b3" stroke-width="1.25"/>
+      <text x="284" y="224" font-weight="600" fill="#0f2233">ムームーDNS</text>
+      <text x="284" y="246" font-size="11.5" fill="#5b6b78">CNAME diving →</text>
+      <text x="284" y="262" font-size="11.5" fill="#5b6b78">diving-site.pages.dev</text>
+      <!-- Pages (accent) -->
+      <rect x="520" y="200" width="216" height="72" rx="8" fill="#e3edf9" stroke="#0d47a1" stroke-width="2"/>
+      <text x="532" y="224" font-weight="600" fill="#0f2233">Cloudflare Pages</text>
+      <text x="532" y="246" font-size="11.5" fill="#0f2233">diving-site を公開</text>
+      <text x="532" y="262" font-size="11.5" fill="#0f2233">（無料プラン）</text>
+      <!-- Workspace -->
+      <rect x="272" y="330" width="216" height="72" rx="8" fill="#fff" stroke="#9aa8b3" stroke-width="1.25"/>
+      <text x="284" y="354" font-weight="600" fill="#0f2233">Google Workspace（メール）</text>
+      <text x="284" y="376" font-size="11.5" fill="#5b6b78">MX・TXT はムームーDNSのまま</text>
+      <text x="284" y="392" font-size="11.5" fill="#5b6b78">変更しない</text>
+    </svg>
+  </div>
+  <p>メール（Workspace）は同じドメインを使いますが、サイトとは別の設定（MX・TXT）なので、サイトの作業で触ることはありません。</p>
+</section>
+
+<!-- 2. サービス一覧 -->
+<section id="services">
+  <h2>使っているサービス一覧</h2>
+  <p class="lead">サイトは5つのサービスを組み合わせて動いています。追加でかかっている費用はありません。</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>サービス</th><th>役割</th><th>アカウント</th><th>料金</th><th>管理画面</th></tr></thead>
+      <tbody>
+        <tr><td>GitHub</td><td>サイトのコードを保存し、変更履歴を残す</td><td><code>linkForYou2026</code></td><td>無料</td><td><a href="https://github.com/linkForYou2026/DivingSite" target="_blank" rel="noopener">github.com</a></td></tr>
+        <tr><td>Cloudflare Pages</td><td>コードからサイトを組み立てて公開する</td><td>info@link-since2026.jp</td><td>無料プラン</td><td><a href="https://dash.cloudflare.com" target="_blank" rel="noopener">dash.cloudflare.com</a></td></tr>
+        <tr><td>ムームードメイン（ムームーDNS）</td><td>ドメイン <code>link-since2026.jp</code> の契約とDNS設定</td><td>ムームードメインのアカウント</td><td>ドメイン代（年額）</td><td><a href="https://muumuu-domain.com" target="_blank" rel="noopener">muumuu-domain.com</a></td></tr>
+        <tr><td>Google Workspace</td><td>メール（info@link-since2026.jp）、Googleドライブ、既存のGoogleサイト</td><td>管理者アカウント</td><td>現在の契約のまま</td><td><a href="https://admin.google.com" target="_blank" rel="noopener">admin.google.com</a></td></tr>
+        <tr><td>Claude（デスクトップアプリ）</td><td>仕様書づくり、コードの作成・修正（Codeタブ＝Claude Code）</td><td>ご自身のアカウント</td><td>契約中のプラン</td><td>デスクトップアプリ</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>パスワードなどのログイン情報は、この資料には書かず、パスワード管理ツールなどで別に管理してください。</p>
+</section>
+
+<!-- 3. GitHub -->
+<section id="github">
+  <h2>GitHub</h2>
+  <p class="lead">サイトのコードは、GitHub の <code>linkForYou2026/DivingSite</code> に保存しています。ここに push すると、Cloudflare Pages が自動で公開し直します。</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>項目</th><th>内容</th></tr></thead>
+      <tbody>
+        <tr><td>リポジトリ</td><td><a href="https://github.com/linkForYou2026/DivingSite" target="_blank" rel="noopener">linkForYou2026/DivingSite</a></td></tr>
+        <tr><td>公開範囲</td><td>Public（誰でも閲覧可能）</td></tr>
+        <tr><td>ブランチ</td><td><code>main</code>（本番用。push すると本番に反映）</td></tr>
+        <tr><td>パソコン上の場所</td><td><code>G:\マイドライブ\事業\DivingSite\HomePage\DivingSite</code></td></tr>
+        <tr><td>push の方法</td><td>GitHub Desktop（Commit to main → Push origin）</td></tr>
+        <tr><td>コミットの記録者</td><td>linkForYou2026（info@link-since2026.jp）</td></tr>
+        <tr><td>連携先</td><td>Cloudflare Pages（<code>diving-site</code>）、Cloudflare Workers（<code>divingsite</code>、削除予定）</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>Public のままだと、コード、仕様書、コミットに記録されたメールアドレスを誰でも見られます。非公開にする場合は「Settings」→「Danger Zone」→「Change visibility」→「Make private」で変更でき、Cloudflare との連携はそのまま使えます。</p>
+</section>
+
+<!-- 4. Cloudflare -->
+<section id="cloudflare">
+  <h2>Cloudflare Pages</h2>
+  <p class="lead">サイトは Cloudflare Pages のプロジェクト <code>diving-site</code> で公開しています。<code>https://diving-site.pages.dev</code> での表示は確認済みです。</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>項目</th><th>設定値</th></tr></thead>
+      <tbody>
+        <tr><td>プロジェクト名</td><td><code>diving-site</code>（Pages）</td></tr>
+        <tr><td>連携しているリポジトリ</td><td><code>linkForYou2026/DivingSite</code></td></tr>
+        <tr><td>本番ブランチ</td><td><code>main</code>（自動デプロイ有効）</td></tr>
+        <tr><td>ビルドコマンド</td><td><code>npm run build</code></td></tr>
+        <tr><td>ビルド出力ディレクトリ</td><td><code>out</code></td></tr>
+        <tr><td>Node.js のバージョン</td><td>22（リポジトリの <code>.node-version</code> で指定）</td></tr>
+        <tr><td>仮のアドレス</td><td><a href="https://diving-site.pages.dev" target="_blank" rel="noopener">https://diving-site.pages.dev</a></td></tr>
+        <tr><td>カスタムドメイン</td><td><code>diving.link-since2026.jp</code>（登録済み。2026-11-23 時点で Inactive、ムームーDNSの設定待ち）</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <h3>Workers と Pages の違いに注意</h3>
+  <ul>
+    <li>最初に Workers のプロジェクト <code>divingsite</code>（ハイフンなし）が作られました。Workers に独自ドメインをつなぐには、ドメインのネームサーバーを Cloudflare に移す必要があります。</li>
+    <li>Pages なら、ムームーDNSのまま CNAME を1行足すだけでサブドメインをつなげられるため、Pages を使っています。</li>
+    <li>Workers の <code>divingsite</code> は不要です。削除するときは、Pages の <code>diving-site</code>（ハイフンあり）を消さないように注意してください。</li>
+    <li>新しく作るときは「Workers &amp; Pages」→「作成」の画面下の「Looking to deploy Pages? Get started」から進みます。「Deploy command」の欄がある画面は Workers です。</li>
+  </ul>
+</section>
+
+<!-- 5. ムームー -->
+<section id="muumuu">
+  <h2>ムームードメイン／ムームーDNS</h2>
+  <p class="lead">ドメイン <code>link-since2026.jp</code> はムームードメインで契約し、DNSもムームーDNSのまま使います。サイト用に足すのは CNAME の1行だけです。</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>項目</th><th>内容</th></tr></thead>
+      <tbody>
+        <tr><td>ドメイン</td><td><code>link-since2026.jp</code></td></tr>
+        <tr><td>次回の入金締切日</td><td>2027/02/18（更新）</td></tr>
+        <tr><td>ネームサーバー</td><td>ムームーDNS（変更しない）</td></tr>
+        <tr><td>サイトのアドレス</td><td><code>diving.link-since2026.jp</code>（サブドメイン）</td></tr>
+        <tr><td>設定場所</td><td>コントロールパネル → ドメイン操作 → ムームーDNS → <code>link-since2026.jp</code> の「変更」→ カスタム設定</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <h3>DNSレコードの扱い</h3>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>レコード</th><th>内容</th><th>扱い</th></tr></thead>
+      <tbody>
+        <tr><td>CNAME</td><td>サブドメイン <code>diving</code> → <code>diving-site.pages.dev</code></td><td>追加する（2026-11-23 時点で未追加）</td></tr>
+        <tr><td>MX</td><td>Google Workspace のメール受信用</td><td><strong>変更・削除しない</strong></td></tr>
+        <tr><td>TXT</td><td>Google のドメイン確認、メール認証（SPF など）</td><td><strong>変更・削除しない</strong></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="warn">DNSを触る前には、必ず今の設定画面をスクリーンショットで保存してください。ドメインそのもの（<code>link-since2026.jp</code>）でサイトを出す場合は、ネームサーバーを Cloudflare に移す必要があり、メール設定の移し替えも伴います。</div>
+</section>
+
+<!-- 6. Workspace -->
+<section id="workspace">
+  <h2>Google Workspace と作業フォルダ</h2>
+  <p class="lead">Google Workspace はメールと資料の保管に使います。資料とコードは、パソコン版Googleドライブで同期される <code>G:\マイドライブ\事業\DivingSite</code> にまとめています。</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>項目</th><th>内容</th></tr></thead>
+      <tbody>
+        <tr><td>メール</td><td>info@link-since2026.jp（MX はムームーDNSで設定済み）</td></tr>
+        <tr><td>管理コンソール</td><td><a href="https://admin.google.com" target="_blank" rel="noopener">admin.google.com</a></td></tr>
+        <tr><td>既存のGoogleサイト</td><td><a href="https://sites.google.com/link-since2026.jp/top" target="_blank" rel="noopener">sites.google.com/link-since2026.jp/top</a> — そのまま残す</td></tr>
+        <tr><td>今後使う予定</td><td>Googleフォーム（問い合わせ）、Googleカレンダー（イベント）、Googleマイマップ（マップ）</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <h3>作業フォルダの中身</h3>
+<pre><code>G:\マイドライブ\事業\DivingSite\
+├─ ダイビング総合ポータルサイト_仕様書.md   仕様書（v0.3）
+├─ 環境構成・運用資料.html                   この資料
+├─ 資格ステップアップ.html ほか              Googleサイト向けの試作HTML（参考用）
+└─ HomePage\
+    ├─ CLAUDE.md, docs\                   最初に置いたもの（今は使わない）
+    └─ DivingSite\                        GitHub のリポジトリ（サイトのコード）</code></pre>
+  <p>コードをドライブの同期フォルダに置くと、<code>node_modules</code>（数万ファイル）の同期で重くなることがあります。その場合は <code>C:\repos\diving-site</code> などに移すことを検討します。</p>
+</section>
+
+<!-- 7. PC -->
+<section id="pc">
+  <h2>パソコンの開発環境</h2>
+  <p class="lead">Windows のパソコンに、次のツールを入れています。パソコンを買い替えたときは、この表の順に入れ直します。</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>ツール</th><th>用途</th><th>入れ方（PowerShell）</th><th>確認コマンド</th></tr></thead>
+      <tbody>
+        <tr><td>Git for Windows</td><td>GitHub とのやり取り</td><td><code>winget install --id Git.Git -e --source winget</code></td><td><code>git --version</code></td></tr>
+        <tr><td>Node.js（LTS）と npm</td><td>サイトの組み立て（ビルド）</td><td><code>winget install --id OpenJS.NodeJS.LTS -e --source winget</code></td><td><code>node -v</code>、<code>npm -v</code></td></tr>
+        <tr><td>GitHub Desktop</td><td>commit と push を画面で操作</td><td><a href="https://desktop.github.com" target="_blank" rel="noopener">desktop.github.com</a> から入手</td><td>起動できればOK</td></tr>
+        <tr><td>Claude デスクトップアプリ</td><td>仕様の相談、コードの作成（Code タブ＝Claude Code）</td><td>契約中のアプリ</td><td>「Code」タブが開ければOK</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <h3>初回だけ行った設定</h3>
+  <ul>
+    <li>Git の記録者名とメール：<code>git config --global user.name "..."</code>、<code>git config --global user.email "..."</code></li>
+    <li><code>npm -v</code> が「スクリプトの実行が無効」で失敗する場合：<code>Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned</code></li>
+    <li>インストール後は PowerShell を開き直す（開き直さないと新しいツールが認識されない）</li>
+  </ul>
+</section>
+
+<!-- 8. Source -->
+<section id="source">
+  <h2>サイトのソースコード</h2>
+  <p class="lead">サイトは Next.js 16（TypeScript、Tailwind CSS 4）で作り、すべてのページを静的なHTMLとして <code>out</code> フォルダに書き出します。サーバー機能は使いません。</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>ファイル／フォルダ</th><th>役割</th></tr></thead>
+      <tbody>
+        <tr><td><code>app/page.tsx</code></td><td>トップページ（現在は「ただいま準備中です」）</td></tr>
+        <tr><td><code>app/layout.tsx</code></td><td>全ページ共通の枠（サイト名、説明文、OGP、公開URL）</td></tr>
+        <tr><td><code>app/not-found.tsx</code></td><td>ページが見つからないときの表示</td></tr>
+        <tr><td><code>app/globals.css</code></td><td>配色（レジャー <code>#4FC3F7</code>、プロ <code>#0D47A1</code>）とフォント</td></tr>
+        <tr><td><code>public/</code></td><td>写真などの画像を置く場所</td></tr>
+        <tr><td><code>package.json</code></td><td>使う部品とコマンド（<code>npm run dev</code>、<code>npm run build</code>）</td></tr>
+        <tr><td><code>next.config.ts</code></td><td>静的書き出しの設定（<code>output: "export"</code>、<code>trailingSlash</code>、画像最適化なし）</td></tr>
+        <tr><td><code>.node-version</code></td><td>Cloudflare で使う Node.js のバージョン（22）</td></tr>
+        <tr><td><code>.gitignore</code></td><td><code>node_modules</code>、<code>.next</code>、<code>out</code> などを GitHub に上げない設定</td></tr>
+        <tr><td><code>wrangler.jsonc</code></td><td>Workers 用の設定。Pages では使わない（Workers 削除後に整理可）</td></tr>
+        <tr><td><code>CLAUDE.md</code></td><td>Claude Code への指示書（技術構成、ルール、進め方）</td></tr>
+        <tr><td><code>docs/</code></td><td>仕様書のコピー</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>今後、資格・スポット・FAQ などのデータは <code>data/</code>、ブログ記事は <code>content/blog/</code> に追加していきます。</p>
+</section>
+
+<!-- 9. Flow -->
+<section id="flow">
+  <h2>更新から公開までの流れ</h2>
+  <p class="lead">サイトを更新するときは、次の5つの手順で進めます。push から数分で本番に反映されます。</p>
+  <ol>
+    <li><strong>変更を依頼する</strong>：Claude デスクトップアプリの「Code」タブで <code>HomePage\DivingSite</code> を開き、やりたいことを伝える（またはチャットで依頼）</li>
+    <li><strong>手元で確認する（任意）</strong>：PowerShell でフォルダに移動し、<code>npm run dev</code> で http://localhost:3000 を開いて見た目を確認、<code>npm run build</code> でエラーがないか確認</li>
+    <li><strong>GitHub に送る</strong>：GitHub Desktop で「Changes」を確認 → Summary を入力 →「Commit to main」→「Push origin」</li>
+    <li><strong>公開を待つ</strong>：Cloudflare Pages が自動でビルドし、<code>diving-site</code> の「Deployments」に結果が並ぶ。GitHub のコミット横の緑のチェックでも確認できる</li>
+    <li><strong>表示を確認する</strong>：<code>https://diving.link-since2026.jp</code>（接続前は <code>https://diving-site.pages.dev</code>）を開く。スマホでも確認する</li>
+  </ol>
+  <p>失敗したときは、Cloudflare の該当デプロイを開いてビルドログをコピーし、Claude に貼り付けて原因を調べます。「Re-run」はそのコミットをやり直すだけで、新しい変更は含まれません。</p>
+</section>
+
+<!-- 10. Trouble -->
+<section id="trouble">
+  <h2>注意事項とトラブルの記録</h2>
+  <div class="warn"><strong>いちばん大事なのは、ムームーDNSの MX・TXT レコードに触らないことです。</strong>誤って変えると Workspace のメールが届かなくなります。</div>
+  <ul>
+    <li>パスワードやAPIキーをコードやリポジトリに入れない（リポジトリは Public）</li>
+    <li>Cloudflare で削除するときは、Pages の <code>diving-site</code> と Workers の <code>divingsite</code> を取り違えない</li>
+    <li>ドライブの同期が終わっていないと、GitHub Desktop の「Changes」に変更が出ないことがある（少し待って「Repository」→「Refresh」）</li>
+  </ul>
+  <h3>構築中に起きたトラブル（2026-11-23）</h3>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>起きたこと</th><th>原因</th><th>対処</th></tr></thead>
+      <tbody>
+        <tr><td>Cloudflare のデプロイが「OpenNext」の処理で失敗</td><td>Workers のプロジェクトで、公開先を指定する設定ファイルがなかった</td><td><code>wrangler.jsonc</code> を追加。最終的に Pages に切り替え</td></tr>
+        <tr><td>「Re-run」しても同じエラー</td><td>古いコミット（frist publish）をやり直していた</td><td>新しいコミットを push</td></tr>
+        <tr><td>Cloudflare のビルドで <code>package.json</code> が見つからない</td><td>GitHub には README しかなく、サイトのコードがまだなかった</td><td>リポジトリの直下に Next.js のひな形を置いて push</td></tr>
+        <tr><td><code>npm -v</code> だけエラー</td><td>PowerShell の実行ポリシー、または開き直していない</td><td>実行ポリシーを RemoteSigned に、PowerShell を開き直す</td></tr>
+        <tr><td><code>git install</code> が動かない</td><td>そのようなコマンドはなく、Git 本体が未インストール</td><td><code>winget install --id Git.Git</code> で入れる</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- 11. Cost -->
+<section id="cost">
+  <h2>費用と更新期限</h2>
+  <p class="lead">このサイトのために新しく増えた費用はありません。忘れてはいけないのは、ドメインの更新です。</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>項目</th><th>費用</th><th>期限・注意</th></tr></thead>
+      <tbody>
+        <tr><td>ドメイン <code>link-since2026.jp</code>（ムームードメイン）</td><td>年額（金額は契約画面で確認）</td><td><strong>入金締切 2027/02/18</strong>。切れるとサイトもメールも止まる</td></tr>
+        <tr><td>Google Workspace</td><td>現在の契約のまま</td><td>—</td></tr>
+        <tr><td>Cloudflare Pages</td><td>無料プラン</td><td>ビルドは月500回まで</td></tr>
+        <tr><td>GitHub</td><td>無料</td><td>—</td></tr>
+        <tr><td>Claude</td><td>契約中のプラン</td><td>Claude Code の利用には有料プランが必要</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>将来 Vercel など別の公開先を検討する場合、Vercel の無料プランは商用利用ができない点に注意します。</p>
+</section>
+
+<!-- 12. TODO -->
+<section id="todo">
+  <h2>残っている作業</h2>
+  <ul class="tasks">
+    <li><input type="checkbox" aria-label="完了"><span>ムームーDNSに CNAME（<code>diving</code> → <code>diving-site.pages.dev</code>）を追加する</span></li>
+    <li><input type="checkbox" aria-label="完了"><span>Cloudflare の「Check DNS records」で <code>diving.link-since2026.jp</code> が Active になったことを確認する</span></li>
+    <li><input type="checkbox" aria-label="完了"><span>Workspace のメールが今までどおり送受信できるか確認する</span></li>
+    <li><input type="checkbox" aria-label="完了"><span>Cloudflare Workers の <code>divingsite</code>（ハイフンなし）を削除する</span></li>
+    <li><input type="checkbox" aria-label="完了"><span>GitHub リポジトリを Public のままにするか、Private にするか決める</span></li>
+    <li><input type="checkbox" aria-label="完了"><span><code>diving-site.pages.dev</code> へのアクセスを <code>diving.link-since2026.jp</code> に転送する設定を入れる</span></li>
+    <li><input type="checkbox" aria-label="完了"><span>不要になった <code>wrangler.jsonc</code> と、<code>HomePage</code> 直下の古い <code>CLAUDE.md</code>・<code>docs</code> を整理する</span></li>
+    <li><input type="checkbox" aria-label="完了"><span>フェーズ1のページ（トップ、資格ガイド、問い合わせ、イベントなど）を作る</span></li>
+  </ul>
+  <p style="color: var(--quiet); font-size: 13px;">※ チェックはこの画面上だけのもので、保存はされません。</p>
+</section>
+
+</main>
+
+<footer>ダイビング総合ポータルサイト 環境構成・運用資料 ／ 2026-11-23 作成</footer>
+
+</body>
+</html>
