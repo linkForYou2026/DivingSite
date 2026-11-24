@@ -34,7 +34,24 @@ export async function listRows(db: D1Database, t: TableDef, q: URLSearchParams) 
   const where: string[] = [];
   const binds: unknown[] = [];
   const status = q.get("status") || "";
-  if (t.hasStatus) {
+  // 「サイトに出ていないもの」（バックオフィス仕様書 9.6）：下書き・非表示・表示期間外・過去のイベント
+  if (q.get("vis") === "hidden" && t.hasStatus) {
+    const extra: string[] = [];
+    const today = new Date(Date.now() + 9 * 3600_000).toISOString().slice(0, 10);
+    if (t.name === "notices") {
+      binds.push(today);
+      extra.push(`publish_from > ?${binds.length}`, `(publish_until IS NOT NULL AND publish_until < ?${binds.length})`);
+    }
+    if (t.name === "events") {
+      binds.push(new Date().toISOString().replace(/\.\d{3}Z$/, "Z"));
+      extra.push(`end_at < ?${binds.length}`);
+    }
+    if (t.reflect === "publish") {
+      const last = "(SELECT value FROM settings WHERE key = 'last_deploy_at')";
+      extra.push(`${last} IS NULL`, `updated_at > ${last}`);
+    }
+    where.push("(" + ["status <> 'published'", ...extra].join(" OR ") + ")");
+  } else if (t.hasStatus) {
     if (status && status !== "all") {
       where.push(`status = ?${binds.length + 1}`);
       binds.push(status);

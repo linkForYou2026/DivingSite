@@ -4,6 +4,7 @@
 import type { Handler } from "../../../../_lib/types";
 import { error, forbidden, json, notFound, readJson } from "../../../../_lib/http";
 import { HttpError, getRow, loadOptions, removeRow, updateRow } from "../../../../_lib/crud";
+import { visibilityContext } from "../../../../_lib/visctx";
 import { getTable } from "../../../../../shared/admin-schema";
 import { can } from "../../../../../shared/permissions";
 
@@ -27,9 +28,9 @@ const wrap = async (fn: () => Promise<Response>) => {
 export const onRequestGet: Handler<"table" | "id"> = async ({ env, params, data }) => {
   const r = resolve(params, data.admin!.role);
   if (!r.t) return r.res!;
-  const [row, options] = await Promise.all([getRow(env.DB, r.t, r.id), loadOptions(env.DB, r.t)]);
+  const [row, options, vctx] = await Promise.all([getRow(env.DB, r.t, r.id), loadOptions(env.DB, r.t), visibilityContext(env.DB, r.t.name)]);
   if (!row) return notFound();
-  return json({ ...row, options });
+  return json({ ...row, options, vctx });
 };
 
 export const onRequestPut: Handler<"table" | "id"> = async ({ env, params, request, data }) => {

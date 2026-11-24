@@ -16,6 +16,8 @@ const GROUPS = ["料金", "イベント", "海・生き物", "資格", "コン�
 
 function buildMenu(): { group: string; items: MenuItem[] }[] {
   const top: MenuItem[] = [
+    { label: "サイトのページから探す", href: "/admin/map/", match: (p) => p.startsWith("/admin/map") },
+    { label: "やりたいこと別ガイド", href: "/admin/guide/", match: (p) => p.startsWith("/admin/guide") },
     { label: "ダッシュボード", href: "/admin/", match: (p) => p === "/admin/" || p === "/admin" },
     { label: "問い合わせ", href: "/admin/inquiries/", cap: "inquiries", match: (p) => p.startsWith("/admin/inquiries") },
   ];

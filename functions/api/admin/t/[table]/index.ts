@@ -3,6 +3,7 @@
 import type { Handler } from "../../../../_lib/types";
 import { error, forbidden, json, notFound, readJson } from "../../../../_lib/http";
 import { HttpError, createRow, listRows, loadOptions } from "../../../../_lib/crud";
+import { visibilityContext } from "../../../../_lib/visctx";
 import { getTable } from "../../../../../shared/admin-schema";
 import { can } from "../../../../../shared/permissions";
 
@@ -11,8 +12,8 @@ export const onRequestGet: Handler<"table"> = async ({ env, params, request, dat
   if (!t) return notFound();
   if (!can(data.admin!.role, t.cap)) return forbidden();
   const q = new URL(request.url).searchParams;
-  const [list, options] = await Promise.all([listRows(env.DB, t, q), loadOptions(env.DB, t)]);
-  return json({ ...list, options });
+  const [list, options, vctx] = await Promise.all([listRows(env.DB, t, q), loadOptions(env.DB, t), visibilityContext(env.DB, t.name)]);
+  return json({ ...list, options, vctx });
 };
 
 export const onRequestPost: Handler<"table"> = async ({ env, params, request, data }) => {

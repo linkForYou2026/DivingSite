@@ -59,6 +59,7 @@ export function FieldInput({
   opts,
   error,
   disabled,
+  site,
 }: {
   f: Field;
   value: FormValue;
@@ -66,10 +67,11 @@ export function FieldInput({
   opts: Opts;
   error?: string;
   disabled?: boolean;
+  site?: { text: string; adminOnly: boolean } | null; // サイトでの使われ方（バックオフィス仕様書 U-5）
 }) {
   const id = "f-" + f.name;
   const ro = disabled || f.readonly;
-  const describedBy = [f.help ? id + "-help" : "", error ? id + "-err" : ""].filter(Boolean).join(" ") || undefined;
+  const describedBy = [site ? id + "-site" : "", f.help ? id + "-help" : "", error ? id + "-err" : ""].filter(Boolean).join(" ") || undefined;
   const common = { id, disabled: ro, "aria-invalid": !!error, "aria-describedby": describedBy };
   let input: React.ReactNode;
 
@@ -192,6 +194,11 @@ export function FieldInput({
         {f.required && !ro && <span className="ml-1.5 rounded bg-red-700 px-1.5 text-[11px] text-white">必須</span>}
       </label>
       {input}
+      {site && (
+        <p id={id + "-site"} className={`mt-1 text-xs ${site.adminOnly ? "text-slate-400" : "font-bold text-ocean"}`}>
+          {site.adminOnly ? site.text : `→ サイトでは：${site.text}`}
+        </p>
+      )}
       {f.help && <p id={id + "-help"} className="mt-1 text-xs text-slate-500">{f.help}</p>}
       {error && <p id={id + "-err"} className="mt-1 text-sm font-bold text-red-700">{error}</p>}
     </div>

@@ -15,7 +15,8 @@ function jst(iso: string) {
   return { m: d.getUTCMonth() + 1, d: d.getUTCDate(), w: W[d.getUTCDay()], hm: `${d.getUTCHours()}:${String(d.getUTCMinutes()).padStart(2, "0")}` };
 }
 
-function EventCard({ e }: { e: EventItem }) {
+/** イベント1件のカード（管理画面のプレビューでも使う） */
+export function EventCard({ e }: { e: EventItem }) {
   const s = jst(e.start_at);
   const open = e.entry_status === "open";
   return (

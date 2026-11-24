@@ -9,8 +9,11 @@ import { useAdmin } from "@/components/admin/AdminContext";
 import { display, type Opts } from "@/components/admin/fields";
 import { Alert, PageTitle, StatusBadge, btnGhost, btnPrimary, inputCls } from "@/components/admin/ui";
 import { getTable } from "@/shared/admin-schema";
+import { allPlacementsFor, placementsFor } from "@/shared/site-map";
+import type { VisCtx } from "@/shared/visibility";
+import { VisibilityCell } from "@/components/admin/SiteInfo";
 
-type ListRes = { rows: Record<string, unknown>[]; total: number; page: number; pageSize: number; options: Opts };
+type ListRes = { rows: Record<string, unknown>[]; total: number; page: number; pageSize: number; options: Opts; vctx: VisCtx };
 
 const REFLECT_NOTE = {
   instant: "保存するとすぐサイトに出ます（最大1分ほど遅れることがあります）。",
@@ -26,6 +29,7 @@ function Inner() {
   const t = getTable(tableName);
   const q = sp.get("q") || "";
   const status = sp.get("status") || "";
+  const vis = sp.get("vis") || "";
   const page = Number(sp.get("page") || 1);
   const [data, setData] = useState<ListRes | null>(null);
   const [err, setErr] = useState("");
@@ -36,19 +40,21 @@ function Inner() {
     if (!t) return;
     setData(null);
     setErr("");
-    const p = new URLSearchParams({ q, status, page: String(page) });
+    const p = new URLSearchParams({ q, status, vis, page: String(page) });
     apiGet<ListRes>(`/api/admin/t/${t.name}?${p}`).then(setData).catch((e) => setErr(e.message));
-  }, [t, q, status, page]);
+  }, [t, q, status, vis, page]);
 
   if (!t) return <Alert>このページは見つかりません。</Alert>;
   if (!can(t.cap)) return <Alert>このデータを見る権限がありません。</Alert>;
 
   const go = (patch: Record<string, string>) => {
-    const p = new URLSearchParams({ table: t.name, q, status, page: "1", ...patch });
+    const p = new URLSearchParams({ table: t.name, q, status, vis, page: "1", ...patch });
     [...p.keys()].forEach((k) => !p.get(k) && p.delete(k));
     router.push(`/admin/t/?${p}`);
   };
   const cols = t.fields.filter((f) => f.list);
+  const placements = allPlacementsFor(t.name);
+  const limited = placements.find((p) => p.limit);
   const pages = data ? Math.max(1, Math.ceil(data.total / data.pageSize)) : 1;
 
   return (
@@ -65,7 +71,13 @@ function Inner() {
       >
         {t.label}
       </PageTitle>
-      {REFLECT_NOTE[t.reflect] && <p className="mb-3 text-sm text-slate-600">{REFLECT_NOTE[t.reflect]}</p>}
+      {placements.length > 0 && (
+        <p className="mb-1 text-sm text-slate-600">
+          表示されるページ：{Array.from(new Set(placements.map((p) => (p.page === "トップ" ? `トップの「${p.part}」` : p.page)))).join("、")}
+        </p>
+      )}
+      {REFLECT_NOTE[t.reflect] && <p className="mb-1 text-sm text-slate-600">{REFLECT_NOTE[t.reflect]}</p>}
+      {limited && <p className="mb-3 text-sm text-slate-600">並び順の数字が小さいほど先に表示されます。{limited.page === "トップ" ? `トップの「${limited.part}」` : limited.page}に出るのは先頭{limited.limit}件です。</p>}
 
       <form
         className="mb-3 flex flex-wrap items-center gap-2"
@@ -80,8 +92,14 @@ function Inner() {
         {t.hasStatus && (
           <>
             <label htmlFor="st" className="ml-2 text-sm">公開状態</label>
-            <select id="st" className={`${inputCls} w-auto`} value={status} onChange={(e) => go({ status: e.target.value })}>
+            <select
+              id="st"
+              className={`${inputCls} w-auto`}
+              value={vis === "hidden" ? "__hidden" : status}
+              onChange={(e) => (e.target.value === "__hidden" ? go({ status: "", vis: "hidden" }) : go({ status: e.target.value, vis: "" }))}
+            >
               <option value="">下書き・公開</option>
+              {placements.length > 0 && <option value="__hidden">サイトに出ていないもの</option>}
               <option value="draft">下書きだけ</option>
               <option value="published">公開だけ</option>
               <option value="archived">非表示だけ</option>
@@ -101,6 +119,8 @@ function Inner() {
               <thead className="bg-slate-100 text-left">
                 <tr>
                   {cols.map((c) => <th key={c.name} className="whitespace-nowrap px-3 py-2">{c.label}</th>)}
+                  {placements.length > 0 && <th className="whitespace-nowrap px-3 py-2">サイト表示</th>}
+                  {placements.length > 0 && <th className="whitespace-nowrap px-3 py-2">表示先</th>}
                   <th className="px-3 py-2"><span className="sr-only">操作</span></th>
                 </tr>
               </thead>
@@ -112,6 +132,14 @@ function Inner() {
                         {c.name === "status" ? <StatusBadge value={String(r.status)} /> : display(c, r[c.name], data.options)}
                       </td>
                     ))}
+                    {placements.length > 0 && (
+                      <td className="px-3 py-2"><VisibilityCell table={t.name} row={r} ctx={data.vctx} /></td>
+                    )}
+                    {placements.length > 0 && (
+                      <td className="px-3 py-2 text-xs text-slate-600">
+                        {Array.from(new Set(placementsFor(t.name, r).filter((p) => !p.limit).map((p) => p.page))).join("、") || "—"}
+                      </td>
+                    )}
                     <td className="px-3 py-2 text-right">
                       <Link href={`/admin/edit/?table=${t.name}&id=${r.id}`} className="whitespace-nowrap text-ocean underline">
                         {t.readOnly ? "詳細" : "編集"}
@@ -120,7 +148,7 @@ function Inner() {
                   </tr>
                 ))}
                 {!data.rows.length && (
-                  <tr><td colSpan={cols.length + 1} className="px-3 py-6 text-center text-slate-500">データがありません</td></tr>
+                  <tr><td colSpan={cols.length + 1 + (placements.length ? 2 : 0)} className="px-3 py-6 text-center text-slate-500">データがありません</td></tr>
                 )}
               </tbody>
             </table>

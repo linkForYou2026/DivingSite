@@ -5,21 +5,39 @@
 // - AreaPreview：エリア単価を変えると、日帰り〜3泊4日の試算をその場で表示 BO-22
 import { useEffect, useState } from "react";
 import { COST_ITEM, COST_ITEM_KEYS } from "@/shared/enums";
+import { COURSE_KINDS } from "@/shared/site-map";
 import { yen } from "@/shared/format";
 import { DAY_OPTIONS, simulate, type AreaRate } from "@/shared/price";
 import { apiGet, apiSend, ApiError } from "./api";
 import { Alert, Card, btnPrimary, inputCls } from "./ui";
 
-export function PlanItems({ planId, updatedAt, onSaved }: { planId: number; updatedAt: string; onSaved: () => void }) {
-  const [amounts, setAmounts] = useState<Record<string, string>>({});
+export function PlanItems({
+  planId,
+  updatedAt,
+  onSaved,
+  amounts,
+  setAmounts,
+}: {
+  planId: number;
+  updatedAt: string;
+  onSaved: () => void;
+  amounts: Record<string, string>;
+  setAmounts: (a: Record<string, string>) => void;
+}) {
   const [errs, setErrs] = useState<Record<string, string>>({});
   const [msg, setMsg] = useState<{ kind: "ok" | "error"; text: string } | null>(null);
   const [busy, setBusy] = useState(false);
 
+  const [courses, setCourses] = useState<{ id: number; name: string; kind: string; price_yen: number | null; status: string }[]>([]);
   useEffect(() => {
     apiGet<{ amounts: Record<string, number> }>(`/api/admin/plans/${planId}/items`).then((r) =>
       setAmounts(Object.fromEntries(Object.entries(r.amounts).map(([k, v]) => [k, String(v)]))),
     );
+    // 参考：講習の現在の料金（バックオフィス仕様書 11.2）
+    apiGet<{ rows: { id: number; name: string; kind: string; price_yen: number | null; status: string }[] }>(`/api/admin/t/services?status=all`)
+      .then((r) => setCourses(r.rows.filter((x) => COURSE_KINDS.includes(x.kind) && x.status !== "archived")))
+      .catch(() => setCourses([]));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [planId]);
 
   const total = COST_ITEM_KEYS.reduce((s, k) => s + (Number(amounts[k]) || 0), 0);
@@ -64,6 +82,20 @@ export function PlanItems({ planId, updatedAt, onSaved }: { planId: number; upda
         内訳を保存
       </button>
       <p className="mt-2 text-xs text-slate-500">※ 上のプラン情報と内訳は別々に保存します。</p>
+      {courses.length > 0 && (
+        <div className="mt-4 rounded-lg bg-slate-50 p-3 text-sm">
+          <p className="font-bold text-slate-700">参考：講習の現在の料金（仕事・講習のメニューと料金）</p>
+          <p className="text-xs text-slate-500">自動では連動しません。講習料を変えたときは、上の「講習・ツアー代」も必要に応じて直してください。</p>
+          <ul className="mt-1">
+            {courses.map((c) => (
+              <li key={c.id} className="flex justify-between border-b border-dotted py-0.5">
+                <span>{c.name}{c.status === "draft" && <span className="ml-1 text-xs text-amber-700">（下書き）</span>}</span>
+                <span>{c.price_yen === null ? "要相談" : yen(c.price_yen)}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
     </Card>
   );
 }

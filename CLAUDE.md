@@ -21,6 +21,7 @@
 - 管理画面（`/admin`、`/api/admin/`）はログイン必須。権限チェックは必ず API 側でも行う
 - データの正は D1。料金・イベント・お知らせ・公開設定は `lib/live.ts`（ページ表示時に `/api/...`）、資格・スポット・FAQ など「公開操作で反映」のデータは `lib/content.ts`（ビルド時に `/api/export`）で読む
 - `data/` の JSON は、D1 が読めないときの初期値（サイト名・資格・FAQ）だけに使う。`spots.json` `cost.json` `events.json` `works.json` `courses.json` `voices.json` `media.json` は使っていない（削除してよい）
+- 「サイトのどこに何が出るか」は `shared/site-map.ts`（バックオフィス仕様書 10章）、表示されない理由の判定は `shared/visibility.ts`、項目ごとのサイトでの使われ方は `shared/field-site.ts`。公開サイトの表示条件や表示項目を変えたら、この3つも必ず合わせて直す
 - 管理対象のテーブルは `shared/admin-schema.ts` に定義する。ここに追加すると、管理画面の一覧・編集と管理APIが使えるようになる
 - 権限は `shared/permissions.ts`（owner／editor）。管理APIは `functions/api/admin/_middleware.ts` でログインを確認し、各APIで `can()` を確認する
 - `functions/` は Next.js の型チェックの対象外（`functions/tsconfig.json` で別に確認）

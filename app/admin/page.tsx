@@ -7,12 +7,15 @@ import { apiGet, apiSend } from "@/components/admin/api";
 import { useAdmin } from "@/components/admin/AdminContext";
 import { Alert, Card, PageTitle, btnPrimary } from "@/components/admin/ui";
 import { enumLabel } from "@/shared/enums";
+import { getTable } from "@/shared/admin-schema";
 import { formatJst } from "@/shared/format";
 
 type Dash = {
   inquiries?: { newCount: number; latest: { id: number; created_at: string; purpose: string; name: string | null }[] };
   events: { id: number; title: string; start_at: string; capacity: number | null; entry_status: string; status: string; entries: number }[];
   stalePrices: { days: number; items: { table: string; tableLabel: string; id: number; title: string; checked_on: string }[] };
+  emptyParts: { page: string; part: string; table: string; editLabel: string; path: string }[];
+  seedDrafts: { table: string; label: string; count: number }[];
   deploy: {
     last_deploy_at?: string;
     last_deploy_result?: string;
@@ -59,6 +62,39 @@ export default function Dashboard() {
       <PageTitle>ダッシュボード</PageTitle>
       {err && <Alert>{err}</Alert>}
       {msg && <Alert kind="ok">{msg}</Alert>}
+      {(d.emptyParts.length > 0 || d.seedDrafts.length > 0) && (
+        <Card title="サイトで「準備中」になっている部分" className="mb-4 border-amber-300">
+          {d.emptyParts.length > 0 ? (
+            <ul className="divide-y text-sm">
+              {d.emptyParts.map((e) => (
+                <li key={e.page + e.part} className="flex flex-wrap items-center gap-x-3 gap-y-1 py-1.5">
+                  <span>
+                    <a href={e.path} target="_blank" rel="noopener noreferrer" className="underline">{e.page}</a> ＞ {e.part}：公開中のデータが0件です
+                  </span>
+                  {can(getTable(e.table)?.cap ?? "content") && (
+                    <Link href={`/admin/t/?table=${e.table}`} className="rounded border border-sky-300 px-2 py-0.5 text-xs text-ocean hover:bg-sky-50">{e.editLabel}を開く</Link>
+                  )}
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p className="text-sm text-slate-500">「準備中」の部分はありません。</p>
+          )}
+          {d.seedDrafts.length > 0 && (
+            <div className="mt-3 rounded-lg bg-amber-50 p-3 text-sm text-amber-900">
+              <p className="font-bold">初期データのうち、下書きのままのもの（金額などを見直してから「公開して保存」してください）</p>
+              <ul className="mt-1 flex flex-wrap gap-x-4">
+                {d.seedDrafts.map((x) => (
+                  <li key={x.table}>
+                    {can(getTable(x.table)?.cap ?? "content") ? <Link href={`/admin/t/?table=${x.table}&status=draft`} className="underline">{x.label}</Link> : x.label}：{x.count}件
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+          <p className="mt-2 text-xs text-slate-500">スポット・資格など「サイトに反映」が必要なデータは、公開したあと「サイトに反映」を押すまで「準備中」のままです。</p>
+        </Card>
+      )}
       <div className="grid gap-4 lg:grid-cols-2">
         {d.inquiries && (
           <Card title={<>未対応の問い合わせ <span className="ml-2 rounded-full bg-red-700 px-2 text-sm text-white">{d.inquiries.newCount}</span></>}>

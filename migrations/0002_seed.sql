@@ -3,8 +3,8 @@
 -- 対応資料：docs/データモデル定義書.md 8章
 --
 -- 実行方法（どちらか）
---   A. Cloudflare ダッシュボード → D1 → diving-db → Console に貼り付けて Execute
---   B. PowerShell：npx wrangler d1 execute diving-db --remote --file=migrations/0002_seed.sql
+--   A. Cloudflare ダッシュボード → D1 → diving-site → Console に貼り付けて Execute
+--   B. PowerShell：npx wrangler d1 execute diving-site --remote --file=migrations/0002_seed.sql
 --
 -- 公開状態の考え方
 --   ・資格・指導団体・FAQ は内容を確認済みのため「公開（published）」で入れる

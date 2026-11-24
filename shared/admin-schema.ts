@@ -56,6 +56,7 @@ export type TableDef = {
   priceFields?: string[]; // 変更されたら checked_on を今日にする金額項目
   m2m?: { name: string; label: string; table: string; fk: string; otherFk: string; refTable: string; refLabel: string };
   special?: "planItems" | "areaPreview"; // 編集画面に追加の部品を出す
+  note?: string; // 編集画面の上部に常に出す注記
 };
 
 const sortOrder: Field = { name: "sort_order", label: "並び順", type: "int", default: 0, help: "小さいほど先に表示" };
@@ -67,7 +68,8 @@ export const TABLES: TableDef[] = [
   /* ---------------- 料金（owner） ---------------- */
   {
     name: "services",
-    label: "自社メニュー・料金",
+    label: "仕事・講習のメニューと料金",
+    note: "【仕事・講習のメニューと料金】自分が販売する価格（講習料、ガイド料など）。【費用の目安（モデルプラン）】お客様が全体でいくら払うかの目安。両者は自動で連動しません。講習料を変えたら、モデルプランの「講習・ツアー代」も必要に応じて直してください。",
     group: "料金",
     cap: "prices",
     reflect: "instant",
@@ -97,7 +99,8 @@ export const TABLES: TableDef[] = [
   },
   {
     name: "model_plans",
-    label: "モデルプラン",
+    label: "費用の目安（モデルプラン）",
+    note: "【費用の目安（モデルプラン）】お客様が全体でいくら払うかの目安（講習代＋レンタル＋交通費＋宿泊など）。【仕事・講習のメニューと料金】自分が販売する価格。両者は自動で連動しません。",
     group: "料金",
     cap: "prices",
     reflect: "instant",
@@ -120,7 +123,7 @@ export const TABLES: TableDef[] = [
   },
   {
     name: "area_rates",
-    label: "エリア単価（費用シミュレーター）",
+    label: "費用シミュレーターの単価",
     group: "料金",
     cap: "prices",
     reflect: "instant",
@@ -232,7 +235,7 @@ export const TABLES: TableDef[] = [
   },
   {
     name: "purposes",
-    label: "目的（サンゴ礁・沈船など）",
+    label: "「目的から探す」の項目",
     group: "海・生き物",
     cap: "content",
     reflect: "publish",
@@ -407,7 +410,7 @@ export const TABLES: TableDef[] = [
   },
   {
     name: "embeds",
-    label: "動画・SNS投稿",
+    label: "動画・SNS（手動で登録）",
     group: "コンテンツ",
     cap: "content",
     reflect: "publish",

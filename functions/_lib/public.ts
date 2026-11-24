@@ -14,7 +14,7 @@ export async function publicPrices(db: D1Database) {
       `SELECT s.id, s.code, s.kind, s.name, s.description, s.license_id, l.code AS license_code, a.code AS agency_code,
               s.price_yen, s.price_unit, s.price_from, s.includes, s.excludes, s.duration, s.is_estimate, s.checked_on, s.accepting, s.sort_order
        FROM services s LEFT JOIN licenses l ON l.id = s.license_id LEFT JOIN agencies a ON a.id = l.agency_id
-       WHERE s.status = 'published' ORDER BY s.kind, s.sort_order, s.id`,
+       WHERE s.status = 'published' ORDER BY s.sort_order, s.id`,
     ).all(),
     db.prepare("SELECT id, code, name, subtitle, inquiry_purpose, memo, is_estimate, checked_on FROM model_plans WHERE status = 'published' ORDER BY sort_order, id").all<{ id: number }>(),
     db.prepare("SELECT plan_id, item, amount_yen FROM plan_cost_items").all<{ plan_id: number; item: string; amount_yen: number }>(),
